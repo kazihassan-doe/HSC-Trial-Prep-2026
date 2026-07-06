@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security, Ethics, Legal &amp; Storage — Trial Exam Day 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FBF7F4; --card: #FFFFFF; --ink: #2B1F16; --ink-soft: #6E5C4C;
+    --amber: #C77B2E; --amber-deep: #8A4F13; --amber-pale: #F3E3D0;
+    --teal: #2E8F82; --teal-pale: #E1F1EE;
+    --line: #EADFD2; --danger: #B5432A;
+    --ok-bg:#E4F6E9; --ok-txt:#1E7A3D; --bad-bg:#FBE9E5; --bad-txt:#B5432A;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; line-height:1.55; padding-bottom:80px; }
+  h1,h2,h3{font-family:'Fraunces',serif; margin:0 0 4px;}
+  .wrap{max-width:840px; margin:0 auto; padding:0 20px;}
+
+  header{ background:var(--amber-deep); color:#fff; padding:28px 0 0; }
+  .head-top{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap;}
+  .eyebrow{ text-transform:uppercase; letter-spacing:.14em; font-size:.72rem; color:#F0CBA0; font-weight:600; }
+  header h1{font-size:1.6rem; color:#fff; font-weight:600;}
+  .subtitle{color:#F0D3AE; font-size:.92rem; margin-top:2px;}
+  .timer-box{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); border-radius:10px; padding:10px 18px; text-align:center; min-width:170px; }
+  .timer-box .label{font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; color:#F0CBA0;}
+  .timer-box .time{font-family:'JetBrains Mono',monospace; font-size:1.7rem; font-weight:500; color:#fff;}
+
+  .stepper{ display:flex; margin-top:26px; border-top:1px solid rgba(255,255,255,.15); }
+  .step{ flex:1; padding:14px 8px 16px; text-align:center; font-size:.82rem; font-weight:600; color:#C99A63; border-bottom:3px solid transparent; }
+  .step .num{ display:inline-block; width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,.12); color:#F0CBA0; font-size:.7rem; line-height:20px; margin-right:6px; }
+  .step.active{color:#fff; border-bottom-color:var(--teal);}
+  .step.active .num{background:var(--teal); color:#fff;}
+  .step.done{color:#F0D3AE;}
+  .step.done .num{background:#5CA89B; color:#fff;}
+
+  main{padding-top:30px;}
+  .banner{ background:var(--amber-pale); border:1px solid #E4C596; border-radius:10px; padding:14px 18px; font-size:.9rem; color:#6B4517; margin-bottom:26px; }
+  .banner b{color:#4A2F0E;}
+  .banner.locked{background:var(--teal-pale); border-color:#BFE0D9; color:#1D5F55;}
+  .banner.discuss{background:#F0EAF9; border-color:#D9C9F0; color:#4B3272;}
+
+  .section-title{ display:flex; align-items:baseline; gap:10px; margin:38px 0 6px; }
+  .section-title h2{font-size:1.15rem; color:var(--amber-deep);}
+  .section-title .marks{ font-size:.78rem; color:var(--ink-soft); font-weight:600; background:var(--amber-pale); padding:2px 9px; border-radius:20px; }
+  .section-desc{font-size:.86rem; color:var(--ink-soft); margin-bottom:16px;}
+
+  .q{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:16px; }
+  .q-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:10px;}
+  .q-num{font-weight:700; color:var(--amber-deep);}
+  .q-marks{font-size:.76rem; color:var(--ink-soft); font-weight:600; white-space:nowrap;}
+  .q-text{margin-bottom:12px; font-size:.98rem;}
+  .scenario-box{ background:#FAF3EA; border-left:3px solid var(--amber); padding:10px 14px; font-size:.9rem; border-radius:0 6px 6px 0; margin-bottom:12px; }
+
+  .opt{ display:flex; align-items:flex-start; gap:9px; padding:9px 10px; border-radius:8px; font-size:.93rem; cursor:pointer; border:1px solid transparent; }
+  .opt:hover{background:var(--amber-pale);}
+  .opt input{margin-top:3px;}
+
+  .verb-tip{ background:var(--amber-pale); border-left:3px solid var(--amber); padding:8px 12px; font-size:.85rem; color:#6B4517; border-radius:0 6px 6px 0; margin-bottom:12px; }
+  .research{ font-size:.85rem; color:var(--ink-soft); background:var(--teal-pale); border-radius:8px; padding:10px 14px; margin-bottom:12px; }
+  .research ul{margin:4px 0 0 18px; padding:0;}
+
+  textarea{ width:100%; border:1px solid var(--line); border-radius:8px; padding:12px 14px; font-family:'Inter',sans-serif; font-size:.93rem; color:var(--ink); resize:vertical; background:#FFFDFB; }
+  textarea:focus{outline:2px solid var(--amber); outline-offset:1px;}
+  .frame{ font-size:.83rem; color:var(--amber-deep); background:#fff; border:1px dashed #E4C596; border-radius:8px; padding:10px 12px; margin-bottom:8px; font-style:italic; }
+
+  select.class-select{ padding:6px 10px; border-radius:6px; border:1px solid var(--line); font-family:'Inter',sans-serif; font-size:.88rem; background:#fff; }
+  table.classify{width:100%; border-collapse:collapse; font-size:.92rem;}
+  table.classify td{padding:10px 6px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  table.classify td.scenario{width:60%;}
+
+  .finish-bar{ position:sticky; bottom:0; background:var(--card); border-top:1px solid var(--line); padding:14px 0; margin-top:34px; text-align:center; }
+  button.primary{ background:var(--amber); color:#fff; border:none; padding:13px 30px; border-radius:30px; font-family:'Inter',sans-serif; font-weight:600; font-size:.95rem; cursor:pointer; transition:background .15s; }
+  button.primary:hover{background:var(--amber-deep);}
+  .hint{font-size:.78rem; color:var(--ink-soft); margin-top:8px;}
+
+  .model-label{ font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--amber-deep); margin-bottom:6px; }
+  .model-box{ background:var(--amber-pale); border-radius:8px; padding:12px 14px; font-size:.9rem; margin-bottom:12px; }
+  .criteria-box{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 14px; font-size:.85rem; margin-bottom:12px; }
+  .criteria-box ul{margin:4px 0 0 18px; padding:0;}
+  .self-mark{ display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .self-mark label{font-size:.83rem; color:var(--ink-soft); font-weight:600;}
+  .self-mark select{padding:5px 8px; border-radius:6px; border:1px solid var(--line);}
+  .rewrite-label{ font-size:.85rem; font-weight:600; color:var(--danger); margin-bottom:6px; }
+  .short-fix{width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-family:'Inter',sans-serif; font-size:.87rem;}
+
+  .your-answer-label{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--ink-soft); margin-bottom:6px;}
+  .your-answer-box{ background:#FAFAF8; border:1px solid var(--line); border-radius:8px; padding:12px 14px; font-size:.9rem; margin-bottom:12px; white-space:pre-wrap; }
+  .your-answer-box.empty{ color:#B8ABA0; font-style:italic; }
+
+  .mcq-row{ display:flex; justify-content:space-between; align-items:center; padding:7px 4px; border-bottom:1px solid var(--line); font-size:.9rem; gap:10px; }
+  .mcq-row:last-child{border-bottom:none;}
+  .pill{ font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:20px; white-space:nowrap; }
+  .pill.ok{background:var(--ok-bg); color:var(--ok-txt);}
+  .pill.bad{background:var(--bad-bg); color:var(--bad-txt);}
+  .pill.blank{background:#EEE; color:#888;}
+  .explain-line{ font-size:.83rem; color:var(--ink-soft); background:var(--teal-pale); border-radius:6px; padding:8px 10px; margin-top:8px; }
+
+  .opt-fb{ display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-radius:8px; font-size:.89rem; margin-bottom:4px; }
+  .opt-fb .tag{ font-size:.7rem; font-weight:700; margin-left:auto; white-space:nowrap; padding-left:10px; }
+  .opt-correct-selected{ background:var(--ok-bg); }
+  .opt-correct-selected .tag{color:var(--ok-txt);}
+  .opt-correct-missed{ background:#FFF6E0; border:1px dashed var(--amber);}
+  .opt-correct-missed .tag{color:#8A6A1D;}
+  .opt-wrong-selected{ background:var(--bad-bg);}
+  .opt-wrong-selected .tag{color:var(--bad-txt);}
+  .opt-neutral{ background:transparent; color:var(--ink-soft);}
+
+  #phaseWrite.hidden, #phaseCheck.hidden, #phaseDiscuss.hidden{display:none;}
+  .progress-note{ text-align:center; font-size:.8rem; color:var(--ink-soft); margin-top:10px; }
+
+  @media(max-width:600px){ .head-top{flex-direction:column;} .stepper{flex-wrap:wrap;} .step{flex:1 1 33%;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="head-top">
+      <div>
+        <div class="eyebrow">Enterprise Computing · Trial Prep · Day 2 of 5</div>
+        <h1>Security, Ethics, Legal &amp; Storage</h1>
+        <div class="subtitle">Privacy, blockchain, big data &amp; how enterprises store what they collect</div>
+      </div>
+      <div class="timer-box">
+        <div class="label" id="timerLabel">Writing time remaining</div>
+        <div class="time" id="timerDisplay">45:00</div>
+      </div>
+    </div>
+    <div class="stepper">
+      <div class="step active" id="step1"><span class="num">1</span>Write (45 min)</div>
+      <div class="step" id="step2"><span class="num">2</span>Self-Check (5 min)</div>
+      <div class="step" id="step3"><span class="num">3</span>Discuss (10 min)</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= WRITE PHASE ================= -->
+  <div id="phaseWrite">
+    <div class="banner">
+      <b>Independent work — no model answers visible.</b> Work through every section using your own knowledge and the research prompts. Pace yourself — roughly 1 minute per mark. Self-Check unlocks when the timer ends or you click Finish below.
+    </div>
+
+    <div class="section-title"><h2>Section I — Multiple Choice</h2><span class="marks">7 marks</span></div>
+    <div class="section-desc">Most questions have more than one correct answer — read every option carefully before deciding.</div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q1</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are genuine privacy risks associated with using the autofill feature on web browsers?</div>
+      <label class="opt"><input type="checkbox" name="q1" value="It can populate fields with previously saved personal information without the user re-entering it, risking exposure on a shared device" data-correct="true"> It can populate fields with previously saved personal information without the user re-entering it, risking exposure on a shared device</label>
+      <label class="opt"><input type="checkbox" name="q1" value="Saved data may be accessible to malicious browser extensions with autofill permissions" data-correct="true"> Saved data may be accessible to malicious browser extensions with autofill permissions</label>
+      <label class="opt"><input type="checkbox" name="q1" value="It automatically encrypts all stored personal data"> It automatically encrypts all stored personal data</label>
+      <label class="opt"><input type="checkbox" name="q1" value="It requires the customer to manually re-type their address every time"> It requires the customer to manually re-type their address every time</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q2</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are genuine applications of blockchain technology in an enterprise context?</div>
+      <label class="opt"><input type="checkbox" name="q2" value="Verifying the authenticity of a digital ticket through a decentralised, immutable ledger" data-correct="true"> Verifying the authenticity of a digital ticket through a decentralised, immutable ledger</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Recording an immutable, transparent history of ownership transfers for a digital asset" data-correct="true"> Recording an immutable, transparent history of ownership transfers for a digital asset</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Compressing large video files for faster streaming"> Compressing large video files for faster streaming</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Encrypting a single file stored locally on one computer"> Encrypting a single file stored locally on one computer</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q3</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following scenarios demonstrate the <b>velocity</b> characteristic of big data?</div>
+      <label class="opt"><input type="checkbox" name="q3" value="A ride-share app processing thousands of live location updates every second" data-correct="true"> A ride-share app processing thousands of live location updates every second</label>
+      <label class="opt"><input type="checkbox" name="q3" value="A sensor network streaming real-time temperature readings continuously" data-correct="true"> A sensor network streaming real-time temperature readings continuously</label>
+      <label class="opt"><input type="checkbox" name="q3" value="A company analysing one static customer list collected three years ago"> A company analysing one static customer list collected three years ago</label>
+      <label class="opt"><input type="checkbox" name="q3" value="A retailer combining structured and unstructured data into one dashboard"> A retailer combining structured and unstructured data into one dashboard</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q4</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are genuine advantages of cloud storage for enterprise data?</div>
+      <label class="opt"><input type="checkbox" name="q4" value="Multiple users in different locations can access and edit the same files" data-correct="true"> Multiple users in different locations can access and edit the same files</label>
+      <label class="opt"><input type="checkbox" name="q4" value="Data can be backed up without needing physical storage media" data-correct="true"> Data can be backed up without needing physical storage media</label>
+      <label class="opt"><input type="checkbox" name="q4" value="It works fully even without an internet connection"> It works fully even without an internet connection</label>
+      <label class="opt"><input type="checkbox" name="q4" value="It guarantees data can never be breached"> It guarantees data can never be breached</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q5</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following statements reflect the concept of data sovereignty for Aboriginal and Torres Strait Islander Peoples?</div>
+      <label class="opt"><input type="checkbox" name="q5" value="Communities have the right to govern the collection, ownership and use of data about their culture and Country" data-correct="true"> Communities have the right to govern the collection, ownership and use of data about their culture and Country</label>
+      <label class="opt"><input type="checkbox" name="q5" value="Data sovereignty supports self-determination in how community data is stored and shared" data-correct="true"> Data sovereignty supports self-determination in how community data is stored and shared</label>
+      <label class="opt"><input type="checkbox" name="q5" value="All data collected in Australia automatically belongs to the Crown"> All data collected in Australia automatically belongs to the Crown</label>
+      <label class="opt"><input type="checkbox" name="q5" value="Data sovereignty only applies to data physically stored overseas"> Data sovereignty only applies to data physically stored overseas</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q6</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following should be considered when evaluating the ethical use of data collected for enterprise research?</div>
+      <label class="opt"><input type="checkbox" name="q6" value="Source of the data" data-correct="true"> Source of the data</label>
+      <label class="opt"><input type="checkbox" name="q6" value="Permissions and consent of individuals involved" data-correct="true"> Permissions and consent of individuals involved</label>
+      <label class="opt"><input type="checkbox" name="q6" value="Potential bias in the data" data-correct="true"> Potential bias in the data</label>
+      <label class="opt"><input type="checkbox" name="q6" value="The colour scheme used in the final report"> The colour scheme used in the final report</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q7</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are genuine risks of using data mining to guide enterprise decisions?</div>
+      <label class="opt"><input type="checkbox" name="q7" value="Patterns identified may reflect historical bias, leading to flawed recommendations" data-correct="true"> Patterns identified may reflect historical bias, leading to flawed recommendations</label>
+      <label class="opt"><input type="checkbox" name="q7" value="Reliance on past trends may cause an enterprise to miss emerging customer needs" data-correct="true"> Reliance on past trends may cause an enterprise to miss emerging customer needs</label>
+      <label class="opt"><input type="checkbox" name="q7" value="It always produces perfectly accurate predictions"> It always produces perfectly accurate predictions</label>
+      <label class="opt"><input type="checkbox" name="q7" value="It eliminates the need for any human interpretation of results"> It eliminates the need for any human interpretation of results</label>
+    </div>
+
+    <div class="section-title"><h2>Section II — Classification</h2><span class="marks">6 marks</span></div>
+    <div class="section-desc">For each scenario, select the most suitable storage method.</div>
+    <div class="q">
+      <table class="classify">
+        <tr><td class="scenario">1. A café keeps its daily till records only on the shop's own computer, with no backup elsewhere.</td>
+          <td><select class="class-select" name="c1"><option value="">Select…</option><option>Local storage</option><option>Cloud storage</option><option>Portable storage media</option><option>Data warehouse</option></select></td></tr>
+        <tr><td class="scenario">2. A national retail chain combines years of sales history from every branch into one large repository purely to spot long-term trends.</td>
+          <td><select class="class-select" name="c2"><option value="">Select…</option><option>Local storage</option><option>Cloud storage</option><option>Portable storage media</option><option>Data warehouse</option></select></td></tr>
+        <tr><td class="scenario">3. Staff carry quarterly financial reports on a USB drive to a client meeting where there is no internet access.</td>
+          <td><select class="class-select" name="c3"><option value="">Select…</option><option>Local storage</option><option>Cloud storage</option><option>Portable storage media</option><option>Data warehouse</option></select></td></tr>
+        <tr><td class="scenario">4. A design team spread across three countries all edit the same files hosted by a third-party online service.</td>
+          <td><select class="class-select" name="c4"><option value="">Select…</option><option>Local storage</option><option>Cloud storage</option><option>Portable storage media</option><option>Data warehouse</option></select></td></tr>
+        <tr><td class="scenario">5. A dentist keeps only this week's appointment file on the surgery's own desktop computer.</td>
+          <td><select class="class-select" name="c5"><option value="">Select…</option><option>Local storage</option><option>Cloud storage</option><option>Portable storage media</option><option>Data warehouse</option></select></td></tr>
+        <tr><td class="scenario">6. A global team accesses and edits the same shared drive through a web browser from any location.</td>
+          <td><select class="class-select" name="c6"><option value="">Select…</option><option>Local storage</option><option>Cloud storage</option><option>Portable storage media</option><option>Data warehouse</option></select></td></tr>
+      </table>
+    </div>
+
+    <div class="section-title"><h2>Section III — Short Answer</h2><span class="marks">12 marks</span></div>
+    <div class="section-desc">Use the research prompts before writing. Roughly 50 words per response.</div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q8</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain"</b> = give reasons with supporting detail, not just a list.</div>
+      <div class="scenario-box">A concert ticketing app wants to prevent counterfeit tickets from being resold.</div>
+      <div class="q-text">Explain how blockchain technology could be used to verify that a ticket is genuine.</div>
+      <div class="research">Before you write:<ul><li>Look up how a "decentralised ledger" differs from a normal database.</li></ul></div>
+      <textarea rows="4" data-key="q8" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q9</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain"</b> = give reasons with supporting detail, not just a list.</div>
+      <div class="q-text">Explain a privacy risk created by the autofill feature on web browsers.</div>
+      <div class="research">Before you write:<ul><li>Find one real report of an autofill-related data exposure.</li></ul></div>
+      <textarea rows="4" data-key="q9" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q10</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain"</b> = show cause and effect — how does X lead to Y?</div>
+      <div class="q-text">Explain one risk of using data mining to guide enterprise decision-making.</div>
+      <div class="research">Before you write:<ul><li>Search for one real example of biased data mining leading to a poor business outcome.</li></ul></div>
+      <textarea rows="4" data-key="q10" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q11</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain"</b> = state the concept AND why it matters here.</div>
+      <div class="q-text">Explain why data sovereignty is an important consideration for enterprises collecting data about Aboriginal and Torres Strait Islander Peoples.</div>
+      <div class="research">Before you write:<ul><li>Look up "Indigenous Data Sovereignty" and find one real Australian principle or framework.</li></ul></div>
+      <textarea rows="4" data-key="q11" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="section-title"><h2>Section IV — Extended Response</h2><span class="marks">8 marks</span></div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12(a)</span><span class="q-marks">5 marks (~100 words)</span></div>
+      <div class="verb-tip">💡 <b>"Assess"</b> = weigh up issues AND reach a clear judgement — description alone will not reach Band 6.</div>
+      <div class="scenario-box">A company begins collecting customers' browsing and purchase history to personalise marketing. Consent is gained through a checkbox that is pre-ticked by default, buried within lengthy terms of agreement.</div>
+      <div class="q-text">Assess the ethical and legal issues raised by this approach to gaining consent for data collection.</div>
+      <div class="research">Before you write:<ul>
+        <li>What makes consent "informed" under Australian privacy principles?</li>
+        <li>Find one real case where pre-ticked consent boxes were criticised or challenged.</li>
+      </ul></div>
+      <div class="frame">Suggested structure: Issue → Why it's a problem (ethical/legal) → Overall judgement on whether this approach is defensible.</div>
+      <textarea rows="6" data-key="q12a" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12(b)</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Describe"</b> = give a clear, detailed account with a specific example.</div>
+      <div class="q-text">Describe how the volume and velocity of the data being collected in Q12(a) could create both an opportunity and a risk for the company.</div>
+      <textarea rows="4" data-key="q12b" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="finish-bar">
+      <button class="primary" id="finishBtn">Finish &amp; Unlock Self-Check</button>
+      <div class="hint">You can also wait for the timer — Self-Check unlocks automatically at 0:00.</div>
+    </div>
+  </div>
+
+  <!-- ================= SELF-CHECK PHASE ================= -->
+  <div id="phaseCheck" class="hidden">
+    <div class="banner locked">
+      <b>Self-Check — 5 minutes.</b> Your own answers now sit next to the correct answer/model answer. Move quickly: mark yourself against the criteria, and note in one line what you'd fix. We'll unpack anything still unclear as a class next.
+    </div>
+
+    <div class="section-title"><h2>Section I — Multiple Choice</h2></div>
+    <div class="q" id="mcqFeedbackBox"><!-- populated by JS --></div>
+
+    <div class="section-title"><h2>Section II — Classification</h2></div>
+    <div class="q" id="classifyFeedbackBox"><!-- populated by JS --></div>
+
+    <div class="section-title"><h2>Section III — Short Answer</h2></div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q8</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q8">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">Blockchain can store each ticket's ownership record in a decentralised, immutable ledger. Once issued, the ticket's data cannot be altered without consensus across the network, so any resale or transfer is recorded transparently. This prevents duplication or forgery, letting buyers confirm a ticket's authenticity and ownership history before purchase.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains how blockchain verifies ticket authenticity, with reference to its decentralised/immutable nature</li>
+        <li><b>2 —</b> Describes a feature of blockchain OR outlines its general use in this scenario</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q8"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q8-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q9</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q9">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">Autofill stores and automatically enters previously typed personal information, such as an address or card details, into web forms. If a device is shared or a browser profile is compromised, this saved data can be exposed to unauthorised parties without the original user actively re-entering it, increasing the risk of accidental disclosure or misuse.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains a privacy risk of autofill, supported by an example of how exposure could occur</li>
+        <li><b>2 —</b> Describes a feature of autofill OR outlines a general privacy concern</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q9"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q9-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q10</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q10">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">Data mining identifies patterns in historical data, but if that data is incomplete, outdated or biased, the patterns found may not reflect current reality. Relying on these flawed patterns can lead an enterprise to make poor decisions, such as targeting the wrong customer segment or missing an emerging trend entirely.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains a genuine risk of data mining, supported by an example of a flawed outcome</li>
+        <li><b>2 —</b> Describes a limitation of data mining OR outlines a general risk</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q10"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q10-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q11</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q11">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">Data sovereignty means Aboriginal and Torres Strait Islander Peoples have the right to control how data about their communities, culture and Country is collected, stored and used. Enterprises must respect this by ensuring collection is consensual and culturally appropriate, and by not assuming ownership of that data themselves — avoiding historical patterns of data misuse.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains data sovereignty and why it matters for enterprises in this context</li>
+        <li><b>2 —</b> Describes data sovereignty OR outlines one relevant consideration</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q11"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q11-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="section-title"><h2>Section IV — Extended Response</h2></div>
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12(a)</span><span class="q-marks">5 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q12a">(no answer given)</div>
+      <div class="model-label">Model Answer (Band 6 standard)</div>
+      <div class="model-box">This approach raises significant ethical and legal issues. A pre-ticked checkbox does not constitute genuine informed consent, since most customers will not read lengthy terms of agreement before proceeding, undermining their right to control their own data. This could breach privacy legislation requiring clear, affirmative consent for data collection. Ethically, it exploits user inattention to gain broad data reuse rights, risking dishonest practice and reduced trust. To be defensible, the company should require an unticked, clearly worded consent option and communicate data use transparently rather than legally minimally.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>5 —</b> Makes an informed judgement about the ethical/legal issues, supported by comprehensive reference to consent, privacy expectations and enterprise responsibility</li>
+        <li><b>3-4 —</b> Makes a judgement about the ethical/legal issues, supported by reference to consent and/or privacy expectations</li>
+        <li><b>2 —</b> Describes an ethical or legal issue present in the scenario</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q12a"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+      <div class="rewrite-label">In one or two sentences, what would push your answer up a band?</div>
+      <textarea rows="3" data-key="q12a-rewrite" placeholder="e.g. I described the issue but never reached an explicit judgement…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12(b)</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q12b">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">The high volume and velocity of browsing/purchase data lets the company build detailed, real-time customer profiles for highly targeted marketing, increasing sales opportunities. However, the same scale and speed make it harder to ensure data accuracy and security, increasing the risk of a large-scale breach or of decisions being based on rapidly outdated data.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Describes both an opportunity and a risk arising from the data's volume/velocity, supported by reasoning</li>
+        <li><b>2 —</b> Describes one opportunity or risk arising from the data's volume/velocity</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q12b"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q12b-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="finish-bar">
+      <button class="primary" id="discussBtn">Done — Ready to Discuss</button>
+      <div class="hint">Self-Check will also advance automatically when its timer ends.</div>
+    </div>
+  </div>
+
+  <!-- ================= DISCUSS PHASE ================= -->
+  <div id="phaseDiscuss" class="hidden">
+    <div class="banner discuss">
+      <b>Class discussion — 10 minutes.</b> Put your device down. Bring your one-line "fixes" and Q12 rewrite to the discussion — your teacher will unpack the questions the class found hardest.
+    </div>
+    <div class="progress-note">Well done — that's the full 60-minute cycle for Day 2.</div>
+  </div>
+
+</main>
+
+<script>
+  const timerDisplay = document.getElementById('timerDisplay');
+  const timerLabel = document.getElementById('timerLabel');
+  const phaseWrite = document.getElementById('phaseWrite');
+  const phaseCheck = document.getElementById('phaseCheck');
+  const phaseDiscuss = document.getElementById('phaseDiscuss');
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const step3 = document.getElementById('step3');
+
+  let phase = 'write';
+  let writeSeconds = 45 * 60;
+  let checkSeconds = 5 * 60;
+  let interval;
+
+  function fmt(sec){
+    const m = Math.floor(sec/60).toString().padStart(2,'0');
+    const s = (sec%60).toString().padStart(2,'0');
+    return m+':'+s;
+  }
+  function renderWrite(){ timerDisplay.textContent = fmt(writeSeconds); timerDisplay.style.color = (writeSeconds<=300) ? '#F4C97A' : '#fff'; }
+  function renderCheck(){ timerDisplay.textContent = fmt(checkSeconds); timerDisplay.style.color = (checkSeconds<=60) ? '#F4C97A' : '#fff'; }
+
+  const mcqQuestions = [
+    {name:'q1', label:'Q1 — Autofill privacy risks', type:'checkbox',
+     explain:"Autofill exposes saved data on shared devices and can be accessed by extensions with the right permissions. It doesn't encrypt anything itself, and the whole point of autofill is that you <i>don't</i> re-type your details — so those two options are the opposite of a risk."},
+    {name:'q2', label:'Q2 — Blockchain applications', type:'checkbox',
+     explain:"Blockchain's value comes from a decentralised, tamper-proof ledger — good for verifying authenticity and tracking ownership history. Video compression and local single-file encryption don't involve a distributed ledger at all, so they're unrelated to what makes blockchain distinctive."},
+    {name:'q3', label:'Q3 — Big data: velocity', type:'checkbox',
+     explain:"Velocity is about the *speed* data is generated and processed — real-time streams qualify. A static three-year-old list has no velocity at all, and combining structured/unstructured data is an example of <i>variety</i>, a different big data characteristic."},
+    {name:'q4', label:'Q4 — Cloud storage advantages', type:'checkbox',
+     explain:"Cloud storage's real strengths are remote multi-user access and not needing physical media. It does require an internet connection to work, and no storage method can honestly guarantee zero risk of breach — that's an overclaim."},
+    {name:'q5', label:'Q5 — Data sovereignty', type:'checkbox',
+     explain:"Data sovereignty is about Aboriginal and Torres Strait Islander Peoples' self-determination over their own data. Claims that data automatically belongs to the Crown, or only applies overseas, misrepresent the concept entirely."},
+    {name:'q6', label:'Q6 — Ethical data use considerations', type:'checkbox',
+     explain:"Ethical use of data centres on where it came from, whether proper consent was given, and whether bias affects fairness. A report's colour scheme is a design choice, not an ethical one."},
+    {name:'q7', label:'Q7 — Data mining risks', type:'checkbox',
+     explain:"Data mining can encode historical bias and over-index on past trends, missing what's changing. It never removes the need for human judgement, and no data mining process can guarantee perfect accuracy — both of those overclaim what the technique can do."},
+  ];
+
+  function buildMcqFeedback(){
+    const box = document.getElementById('mcqFeedbackBox');
+    let html = '';
+    mcqQuestions.forEach(q=>{
+      const inputs = Array.from(document.querySelectorAll(`input[name="${q.name}"]`));
+      const correctVals = inputs.filter(i=>i.dataset.correct==='true').map(i=>i.value);
+      const selectedVals = inputs.filter(i=>i.checked).map(i=>i.value);
+      const isCorrect = correctVals.length === selectedVals.length && correctVals.every(v=>selectedVals.includes(v));
+      const answered = selectedVals.length > 0;
+      let pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
+      let pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
+      html += `<div class="mcq-row"><span>${q.label}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
+      inputs.forEach(i=>{
+        const isOptCorrect = i.dataset.correct === 'true';
+        const isSelected = i.checked;
+        let cls, icon, tag;
+        if(isOptCorrect && isSelected){ cls='opt-correct-selected'; icon='✅'; tag='Your answer — correct'; }
+        else if(isOptCorrect && !isSelected){ cls='opt-correct-missed'; icon='⭕'; tag="Correct — you didn't select this"; }
+        else if(!isOptCorrect && isSelected){ cls='opt-wrong-selected'; icon='❌'; tag='Your answer — incorrect'; }
+        else { cls='opt-neutral'; icon='▫️'; tag=''; }
+        html += `<div class="opt-fb ${cls}"><span>${icon}</span><span>${i.value}</span>${tag ? `<span class="tag">${tag}</span>` : ''}</div>`;
+      });
+      if(!isCorrect){
+        html += `<div class="explain-line">💡 ${q.explain}</div>`;
+      }
+      html += `<div style="height:14px;"></div>`;
+    });
+    box.innerHTML = html;
+  }
+
+  const correctClass = {c1:'Local storage', c2:'Data warehouse', c3:'Portable storage media', c4:'Cloud storage', c5:'Local storage', c6:'Cloud storage'};
+  const classLabels = {
+    c1:'Café till records, in-store only', c2:'National retailer, long-term trend repository',
+    c3:'USB drive of reports, off-site meeting', c4:'Remote design team, third-party online service',
+    c5:"Dentist's current week file, own desktop", c6:'Global team, browser-based shared drive'
+  };
+  const classExplain = {
+    c1:"Kept only on the shop's own computer with no external access or backup — that's local storage.",
+    c2:"A large repository combining historical data purely for long-term trend analysis is the defining feature of a data warehouse.",
+    c3:"A USB drive that's physically carried and works with no internet connection is portable storage media.",
+    c4:"Files hosted by a third-party provider and accessed over the internet from multiple locations is cloud storage.",
+    c5:"Kept only on the surgery's own desktop computer for current, everyday use — that's local storage.",
+    c6:"Accessed and edited via a web browser from any location through a shared online service is cloud storage."
+  };
+  function buildClassifyFeedback(){
+    const box = document.getElementById('classifyFeedbackBox');
+    let html = '';
+    Object.keys(correctClass).forEach(key=>{
+      const sel = document.querySelector(`select[name="${key}"]`);
+      const studentVal = sel ? sel.value : '';
+      const correctVal = correctClass[key];
+      const answered = studentVal !== '';
+      const isCorrect = studentVal === correctVal;
+      const pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
+      const pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
+      html += `<div class="mcq-row"><span>${classLabels[key]}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
+      html += `<div style="font-size:.85rem; color:var(--ink-soft); margin:2px 0 6px 2px;">
+                 <b>Your answer:</b> ${answered ? studentVal : '<i>no answer given</i>'} &nbsp; | &nbsp; <b>Correct answer:</b> ${correctVal}
+               </div>`;
+      if(!isCorrect){
+        html += `<div class="explain-line">💡 ${classExplain[key]}</div>`;
+      }
+    });
+    box.innerHTML = html;
+  }
+
+  function mirrorTextAnswers(){
+    document.querySelectorAll('.your-answer-box[data-mirror]').forEach(box=>{
+      const key = box.dataset.mirror;
+      const source = document.querySelector(`textarea[data-key="${key}"]`);
+      const val = source ? source.value.trim() : '';
+      if(val){
+        box.textContent = val;
+        box.classList.remove('empty');
+      } else {
+        box.textContent = '(no answer given)';
+        box.classList.add('empty');
+      }
+    });
+  }
+
+  function goToCheck(){
+    if(phase !== 'write') return;
+    phase = 'check';
+    clearInterval(interval);
+    buildMcqFeedback();
+    buildClassifyFeedback();
+    mirrorTextAnswers();
+    phaseWrite.classList.add('hidden');
+    phaseCheck.classList.remove('hidden');
+    step1.classList.remove('active'); step1.classList.add('done');
+    step2.classList.add('active');
+    timerLabel.textContent = 'Self-check time remaining';
+    renderCheck();
+    interval = setInterval(()=>{
+      if(checkSeconds>0){ checkSeconds--; renderCheck(); }
+      if(checkSeconds<=0){ goToDiscuss(); }
+    },1000);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function goToDiscuss(){
+    if(phase === 'discuss') return;
+    phase = 'discuss';
+    clearInterval(interval);
+    phaseCheck.classList.add('hidden');
+    phaseDiscuss.classList.remove('hidden');
+    step2.classList.remove('active'); step2.classList.add('done');
+    step3.classList.add('active');
+    timerLabel.textContent = 'Discussion';
+    timerDisplay.textContent = '10:00';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  interval = setInterval(()=>{
+    if(phase==='write'){
+      if(writeSeconds>0){ writeSeconds--; renderWrite(); }
+      if(writeSeconds<=0){ goToCheck(); }
+    }
+  },1000);
+  renderWrite();
+
+  document.getElementById('finishBtn').addEventListener('click', goToCheck);
+  document.getElementById('discussBtn').addEventListener('click', goToDiscuss);
+
+  const STORAGE_KEY = 'day2_security_ethics_storage_v1';
+  function saveAll(){
+    const data = {};
+    document.querySelectorAll('textarea[data-key], input.short-fix[data-key]').forEach(t=>{ data[t.dataset.key] = t.value; });
+    document.querySelectorAll('select.class-select').forEach(sel=>{ data['sel_'+sel.name] = sel.value; });
+    document.querySelectorAll('select[data-selfmark]').forEach(sel=>{ data['mark_'+sel.dataset.selfmark] = sel.value; });
+    document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i=>{
+      data['chk_'+i.name+'_'+i.value] = i.checked;
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+  document.addEventListener('input', saveAll);
+  document.addEventListener('change', saveAll);
+
+  window.addEventListener('load', ()=>{
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+      document.querySelectorAll('textarea[data-key], input.short-fix[data-key]').forEach(t=>{
+        if(data[t.dataset.key]) t.value = data[t.dataset.key];
+      });
+      document.querySelectorAll('select.class-select').forEach(sel=>{
+        if(data['sel_'+sel.name]) sel.value = data['sel_'+sel.name];
+      });
+      document.querySelectorAll('select[data-selfmark]').forEach(sel=>{
+        if(data['mark_'+sel.dataset.selfmark]) sel.value = data['mark_'+sel.dataset.selfmark];
+      });
+      document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i=>{
+        if(data['chk_'+i.name+'_'+i.value]) i.checked = true;
+      });
+    }catch(e){ console.warn('Restore failed', e); }
+  });
+</script>
+
+</body>
+</html>
