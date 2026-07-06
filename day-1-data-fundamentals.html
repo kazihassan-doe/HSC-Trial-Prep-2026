@@ -9,27 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #F5FAF8;
-    --card: #FFFFFF;
-    --ink: #142B28;
-    --ink-soft: #4A625E;
-    --teal: #1F8A7A;
-    --teal-deep: #0F5C51;
-    --teal-pale: #E3F3EF;
-    --amber: #E3A93F;
-    --amber-pale: #FBF0DC;
-    --line: #DCEBE6;
-    --danger: #C2542E;
+    --bg: #F5FAF8; --card: #FFFFFF; --ink: #142B28; --ink-soft: #4A625E;
+    --teal: #1F8A7A; --teal-deep: #0F5C51; --teal-pale: #E3F3EF;
+    --amber: #E3A93F; --amber-pale: #FBF0DC; --line: #DCEBE6; --danger: #C2542E;
+    --ok-bg:#E4F6E9; --ok-txt:#1E7A3D; --bad-bg:#FBE9E5; --bad-txt:#B5432A;
   }
   *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'Inter',sans-serif;
-    line-height:1.55;
-    padding-bottom:80px;
-  }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; line-height:1.55; padding-bottom:80px; }
   h1,h2,h3{font-family:'Fraunces',serif; margin:0 0 4px;}
   .wrap{max-width:840px; margin:0 auto; padding:0 20px;}
 
@@ -43,7 +29,7 @@
   .timer-box .time{font-family:'JetBrains Mono',monospace; font-size:1.7rem; font-weight:500; color:#fff;}
 
   .stepper{ display:flex; margin-top:26px; border-top:1px solid rgba(255,255,255,.15); }
-  .step{ flex:1; padding:14px 8px 16px; text-align:center; font-size:.82rem; font-weight:600; color:#5E9C8F; position:relative; border-bottom:3px solid transparent; }
+  .step{ flex:1; padding:14px 8px 16px; text-align:center; font-size:.82rem; font-weight:600; color:#5E9C8F; border-bottom:3px solid transparent; }
   .step .num{ display:inline-block; width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,.12); color:#9FD6C9; font-size:.7rem; line-height:20px; margin-right:6px; }
   .step.active{color:#fff; border-bottom-color:var(--amber);}
   .step.active .num{background:var(--amber); color:var(--teal-deep);}
@@ -82,7 +68,7 @@
   select.class-select{ padding:6px 10px; border-radius:6px; border:1px solid var(--line); font-family:'Inter',sans-serif; font-size:.88rem; background:#fff; }
   table.classify{width:100%; border-collapse:collapse; font-size:.92rem;}
   table.classify td{padding:10px 6px; border-bottom:1px solid var(--line); vertical-align:middle;}
-  table.classify td.scenario{width:65%;}
+  table.classify td.scenario{width:55%;}
 
   .order-list{list-style:none; margin:0; padding:0;}
   .order-item{ display:flex; align-items:center; gap:10px; background:#FCFEFD; border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:8px; font-size:.92rem; }
@@ -91,7 +77,6 @@
   .finish-bar{ position:sticky; bottom:0; background:var(--card); border-top:1px solid var(--line); padding:14px 0; margin-top:34px; text-align:center; }
   button.primary{ background:var(--teal); color:#fff; border:none; padding:13px 30px; border-radius:30px; font-family:'Inter',sans-serif; font-weight:600; font-size:.95rem; cursor:pointer; transition:background .15s; }
   button.primary:hover{background:var(--teal-deep);}
-  button.primary:disabled{background:#B7C9C4; cursor:not-allowed;}
   .hint{font-size:.78rem; color:var(--ink-soft); margin-top:8px;}
 
   .model-label{ font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--teal-deep); margin-bottom:6px; }
@@ -103,6 +88,18 @@
   .self-mark select{padding:5px 8px; border-radius:6px; border:1px solid var(--line);}
   .rewrite-label{ font-size:.85rem; font-weight:600; color:var(--danger); margin-bottom:6px; }
   .short-fix{width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-family:'Inter',sans-serif; font-size:.87rem;}
+
+  .your-answer-label{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--ink-soft); margin-bottom:6px;}
+  .your-answer-box{ background:#FAFAF8; border:1px solid var(--line); border-radius:8px; padding:12px 14px; font-size:.9rem; margin-bottom:12px; white-space:pre-wrap; }
+  .your-answer-box.empty{ color:#A8B8B4; font-style:italic; }
+
+  .mcq-row{ display:flex; justify-content:space-between; align-items:center; padding:7px 4px; border-bottom:1px solid var(--line); font-size:.9rem; gap:10px; }
+  .mcq-row:last-child{border-bottom:none;}
+  .pill{ font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:20px; white-space:nowrap; }
+  .pill.ok{background:var(--ok-bg); color:var(--ok-txt);}
+  .pill.bad{background:var(--bad-bg); color:var(--bad-txt);}
+  .pill.blank{background:#EEE; color:#888;}
+  .explain-line{ font-size:.83rem; color:var(--ink-soft); background:var(--amber-pale); border-radius:6px; padding:8px 10px; margin-top:8px; }
 
   #phaseWrite.hidden, #phaseCheck.hidden, #phaseDiscuss.hidden{display:none;}
   .progress-note{ text-align:center; font-size:.8rem; color:var(--ink-soft); margin-top:10px; }
@@ -147,64 +144,64 @@
     <div class="q">
       <div class="q-head"><span class="q-num">Q1</span><span class="q-marks">1 mark · more than one may apply</span></div>
       <div class="q-text">Which of the following are examples of <b>passive</b> data collection?</div>
-      <label class="opt"><input type="checkbox" name="q1"> A customer survey emailed after purchase</label>
-      <label class="opt"><input type="checkbox" name="q1"> A website tracking how long a user stays on a page</label>
-      <label class="opt"><input type="checkbox" name="q1"> A focus group discussion</label>
-      <label class="opt"><input type="checkbox" name="q1"> A loyalty card scanning purchase history automatically</label>
+      <label class="opt"><input type="checkbox" name="q1" value="A customer survey emailed after purchase"> A customer survey emailed after purchase</label>
+      <label class="opt"><input type="checkbox" name="q1" value="A website tracking how long a user stays on a page" data-correct="true"> A website tracking how long a user stays on a page</label>
+      <label class="opt"><input type="checkbox" name="q1" value="A focus group discussion"> A focus group discussion</label>
+      <label class="opt"><input type="checkbox" name="q1" value="A loyalty card scanning purchase history automatically" data-correct="true"> A loyalty card scanning purchase history automatically</label>
     </div>
 
     <div class="q">
       <div class="q-head"><span class="q-num">Q2</span><span class="q-marks">1 mark</span></div>
       <div class="q-text">A fitness app records a user's heart rate in beats per minute. This is an example of:</div>
-      <label class="opt"><input type="radio" name="q2"> Qualitative data</label>
-      <label class="opt"><input type="radio" name="q2"> Quantitative data</label>
-      <label class="opt"><input type="radio" name="q2"> Metadata</label>
-      <label class="opt"><input type="radio" name="q2"> Structured feedback</label>
+      <label class="opt"><input type="radio" name="q2" value="Qualitative data"> Qualitative data</label>
+      <label class="opt"><input type="radio" name="q2" value="Quantitative data" data-correct="true"> Quantitative data</label>
+      <label class="opt"><input type="radio" name="q2" value="Metadata"> Metadata</label>
+      <label class="opt"><input type="radio" name="q2" value="Structured feedback"> Structured feedback</label>
     </div>
 
     <div class="q">
       <div class="q-head"><span class="q-num">Q3</span><span class="q-marks">1 mark</span></div>
       <div class="q-text">Which dataset is best described as <b>unstructured</b>?</div>
-      <label class="opt"><input type="radio" name="q3"> A spreadsheet of customer transactions</label>
-      <label class="opt"><input type="radio" name="q3"> A relational database of student enrolments</label>
-      <label class="opt"><input type="radio" name="q3"> A folder of customer complaint emails</label>
-      <label class="opt"><input type="radio" name="q3"> A table of stock inventory codes</label>
+      <label class="opt"><input type="radio" name="q3" value="A spreadsheet of customer transactions"> A spreadsheet of customer transactions</label>
+      <label class="opt"><input type="radio" name="q3" value="A relational database of student enrolments"> A relational database of student enrolments</label>
+      <label class="opt"><input type="radio" name="q3" value="A folder of customer complaint emails" data-correct="true"> A folder of customer complaint emails</label>
+      <label class="opt"><input type="radio" name="q3" value="A table of stock inventory codes"> A table of stock inventory codes</label>
     </div>
 
     <div class="q">
       <div class="q-head"><span class="q-num">Q4</span><span class="q-marks">1 mark</span></div>
       <div class="q-text">Raw sales figures are cleaned, sorted and summarised into a monthly report. The report is best described as:</div>
-      <label class="opt"><input type="radio" name="q4"> Raw data</label>
-      <label class="opt"><input type="radio" name="q4"> Processed data</label>
-      <label class="opt"><input type="radio" name="q4"> Metadata</label>
-      <label class="opt"><input type="radio" name="q4"> Primary data</label>
+      <label class="opt"><input type="radio" name="q4" value="Raw data"> Raw data</label>
+      <label class="opt"><input type="radio" name="q4" value="Processed data" data-correct="true"> Processed data</label>
+      <label class="opt"><input type="radio" name="q4" value="Metadata"> Metadata</label>
+      <label class="opt"><input type="radio" name="q4" value="Primary data"> Primary data</label>
     </div>
 
     <div class="q">
       <div class="q-head"><span class="q-num">Q5</span><span class="q-marks">1 mark · more than one may apply</span></div>
       <div class="q-text">Which situations are most likely to introduce <b>data bias</b>?</div>
-      <label class="opt"><input type="checkbox" name="q5"> A survey only distributed to people who already visited the store</label>
-      <label class="opt"><input type="checkbox" name="q5"> A random sample drawn from the entire customer database</label>
-      <label class="opt"><input type="checkbox" name="q5"> A feedback form only available in English for a multilingual customer base</label>
-      <label class="opt"><input type="checkbox" name="q5"> A sensor logging temperature every minute automatically</label>
+      <label class="opt"><input type="checkbox" name="q5" value="A survey only distributed to people who already visited the store" data-correct="true"> A survey only distributed to people who already visited the store</label>
+      <label class="opt"><input type="checkbox" name="q5" value="A random sample drawn from the entire customer database"> A random sample drawn from the entire customer database</label>
+      <label class="opt"><input type="checkbox" name="q5" value="A feedback form only available in English for a multilingual customer base" data-correct="true"> A feedback form only available in English for a multilingual customer base</label>
+      <label class="opt"><input type="checkbox" name="q5" value="A sensor logging temperature every minute automatically"> A sensor logging temperature every minute automatically</label>
     </div>
 
     <div class="q">
       <div class="q-head"><span class="q-num">Q6</span><span class="q-marks">1 mark</span></div>
       <div class="q-text">A company uses last year's ABS census data to plan a new store location. This is an example of:</div>
-      <label class="opt"><input type="radio" name="q6"> Primary data</label>
-      <label class="opt"><input type="radio" name="q6"> Secondary data</label>
-      <label class="opt"><input type="radio" name="q6"> Metadata</label>
-      <label class="opt"><input type="radio" name="q6"> Active data</label>
+      <label class="opt"><input type="radio" name="q6" value="Primary data"> Primary data</label>
+      <label class="opt"><input type="radio" name="q6" value="Secondary data" data-correct="true"> Secondary data</label>
+      <label class="opt"><input type="radio" name="q6" value="Metadata"> Metadata</label>
+      <label class="opt"><input type="radio" name="q6" value="Active data"> Active data</label>
     </div>
 
     <div class="q">
       <div class="q-head"><span class="q-num">Q7</span><span class="q-marks">1 mark</span></div>
       <div class="q-text">A company tracks likes and emoticon reactions on its social media posts as a form of customer feedback. This is best described as:</div>
-      <label class="opt"><input type="radio" name="q7"> Structured, high-reliability data</label>
-      <label class="opt"><input type="radio" name="q7"> Alternative data with limited context</label>
-      <label class="opt"><input type="radio" name="q7"> Secondary interval data</label>
-      <label class="opt"><input type="radio" name="q7"> Metadata about the company's own posts</label>
+      <label class="opt"><input type="radio" name="q7" value="Structured, high-reliability data"> Structured, high-reliability data</label>
+      <label class="opt"><input type="radio" name="q7" value="Alternative data with limited context" data-correct="true"> Alternative data with limited context</label>
+      <label class="opt"><input type="radio" name="q7" value="Secondary interval data"> Secondary interval data</label>
+      <label class="opt"><input type="radio" name="q7" value="Metadata about the company's own posts"> Metadata about the company's own posts</label>
     </div>
 
     <div class="section-title"><h2>Section II — Ordering</h2><span class="marks">2 marks</span></div>
@@ -306,30 +303,24 @@
   <!-- ================= SELF-CHECK PHASE ================= -->
   <div id="phaseCheck" class="hidden">
     <div class="banner locked">
-      <b>Self-Check — 5 minutes.</b> Move quickly: objective answers are shown straight away, mark yourself against the criteria for the written questions, and note in one line what you'd fix. We'll unpack anything still unclear as a class next.
+      <b>Self-Check — 5 minutes.</b> Your own answers now sit next to the correct answer/model answer. Move quickly: mark yourself against the criteria, and note in one line what you'd fix. We'll unpack anything still unclear as a class next.
     </div>
 
-    <div class="section-title"><h2>Sections I–III — Answers</h2></div>
-    <div class="q">
-      <div class="model-box">
-        <b>Q1:</b> Website tracking time-on-page; loyalty card auto-scanning &nbsp;|&nbsp;
-        <b>Q2:</b> Quantitative data &nbsp;|&nbsp; <b>Q3:</b> Folder of customer complaint emails &nbsp;|&nbsp;
-        <b>Q4:</b> Processed data &nbsp;|&nbsp;
-        <b>Q5:</b> Survey only to store visitors; English-only form &nbsp;|&nbsp;
-        <b>Q6:</b> Secondary data &nbsp;|&nbsp; <b>Q7:</b> Alternative data with limited context
-      </div>
-      <div class="model-box">
-        <b>Ordering:</b> 1. Determine collection/sampling method &nbsp; 2. Collect raw data &nbsp; 3. Clean and process &nbsp; 4. Analyse and present
-      </div>
-      <div class="model-box">
-        <b>Classification:</b> 1. Ordinal &nbsp; 2. Nominal &nbsp; 3. Interval &nbsp; 4. Ratio &nbsp; 5. Ordinal &nbsp; 6. Nominal
-      </div>
-    </div>
+    <div class="section-title"><h2>Section I — Multiple Choice</h2></div>
+    <div class="q" id="mcqFeedbackBox"><!-- populated by JS --></div>
+
+    <div class="section-title"><h2>Section II — Ordering</h2></div>
+    <div class="q" id="orderFeedbackBox"><!-- populated by JS --></div>
+
+    <div class="section-title"><h2>Section III — Classification</h2></div>
+    <div class="q" id="classifyFeedbackBox"><!-- populated by JS --></div>
 
     <div class="section-title"><h2>Section IV — Short Answer</h2></div>
 
     <div class="q">
       <div class="q-head"><span class="q-num">Q12</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q12">(no answer given)</div>
       <div class="model-label">Model Answer</div>
       <div class="model-box">Raw data is often unclean, unsorted, and may contain errors, duplicates or irrelevant entries. This makes patterns hard to see and can lead to poor decisions if acted on directly. For example, a retailer using unfiltered sales logs might miscalculate stock needs because returns and cancelled orders weren't removed. Processing is needed before the data is reliable for decision-making.</div>
       <div class="criteria-box"><b>Marking criteria:</b><ul>
@@ -345,6 +336,8 @@
 
     <div class="q">
       <div class="q-head"><span class="q-num">Q13</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q13">(no answer given)</div>
       <div class="model-label">Model Answer</div>
       <div class="model-box">Active data collection involves directly asking users for information, such as a customer completing a satisfaction survey. Passive data collection happens automatically in the background, such as a website recording click patterns via cookies. The key difference is the level of user awareness and effort involved in providing the data.</div>
       <div class="criteria-box"><b>Marking criteria:</b><ul>
@@ -360,6 +353,8 @@
 
     <div class="q">
       <div class="q-head"><span class="q-num">Q14</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q14">(no answer given)</div>
       <div class="model-label">Model Answer</div>
       <div class="model-box">If a sample is not representative of the wider population, the data collected will be biased and conclusions drawn from it may not reflect reality. For example, surveying only customers who visit during weekday mornings excludes working customers, skewing results toward retirees or parents. A properly randomised or stratified sample reduces this risk and increases reliability.</div>
       <div class="criteria-box"><b>Marking criteria:</b><ul>
@@ -375,6 +370,8 @@
 
     <div class="q">
       <div class="q-head"><span class="q-num">Q15</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q15">(no answer given)</div>
       <div class="model-label">Model Answer</div>
       <div class="model-box">Primary data is collected first-hand by the enterprise for a specific purpose (e.g. its own customer survey), while secondary data is collected by someone else for a different purpose and reused (e.g. ABS census data). This matters for reliability because primary data is usually more directly relevant and current, while secondary data may be outdated or not perfectly suited to the enterprise's context, even though it can be faster and cheaper to obtain.</div>
       <div class="criteria-box"><b>Marking criteria:</b><ul>
@@ -391,6 +388,8 @@
     <div class="section-title"><h2>Section V — Extended Response</h2></div>
     <div class="q">
       <div class="q-head"><span class="q-num">Q16(a)</span><span class="q-marks">5 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q16a">(no answer given)</div>
       <div class="model-label">Model Answer (Band 6 standard)</div>
       <div class="model-box">Likes and emoticons offer enterprises fast, large-volume, low-cost feedback, useful for gauging broad sentiment on a product launch in near real-time. However, this data has significant reliability limitations: it lacks context (a "like" doesn't explain why), is prone to bias toward extreme reactions, can be manipulated by bots, and reflects only users who chose to engage. Because it cannot be verified for accuracy or intent, it is best treated as a supplementary indicator rather than a reliable primary data source — enterprises should combine it with structured feedback to draw valid conclusions.</div>
       <div class="criteria-box"><b>Marking criteria:</b><ul>
@@ -408,6 +407,8 @@
 
     <div class="q">
       <div class="q-head"><span class="q-num">Q16(b)</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q16b">(no answer given)</div>
       <div class="model-label">Model Answer</div>
       <div class="model-box">If bias in the raw feedback data (e.g. only capturing extreme reactions) is acted on directly, the enterprise risks over- or under-investing in a product based on an unrepresentative picture of customer sentiment. For example, a spike in negative emoji reactions from a small, vocal group could trigger an unnecessary product recall, wasting resources and misjudging the true scale of customer concern.</div>
       <div class="criteria-box"><b>Marking criteria:</b><ul>
@@ -447,7 +448,7 @@
   const step2 = document.getElementById('step2');
   const step3 = document.getElementById('step3');
 
-  let phase = 'write'; // write -> check -> discuss
+  let phase = 'write';
   let writeSeconds = 45 * 60;
   let checkSeconds = 5 * 60;
   let interval;
@@ -457,20 +458,134 @@
     const s = (sec%60).toString().padStart(2,'0');
     return m+':'+s;
   }
+  function renderWrite(){ timerDisplay.textContent = fmt(writeSeconds); timerDisplay.style.color = (writeSeconds<=300) ? '#F4C97A' : '#fff'; }
+  function renderCheck(){ timerDisplay.textContent = fmt(checkSeconds); timerDisplay.style.color = (checkSeconds<=60) ? '#F4C97A' : '#fff'; }
 
-  function renderWrite(){
-    timerDisplay.textContent = fmt(writeSeconds);
-    timerDisplay.style.color = (writeSeconds<=300) ? '#F4C97A' : '#fff';
+  // ---- MCQ definitions for feedback ----
+  const mcqQuestions = [
+    {name:'q1', label:'Q1 — Passive data collection', type:'checkbox',
+     explain:"Passive collection happens automatically without the user consciously providing data. Surveys and focus groups require active input, so they don't count."},
+    {name:'q2', label:'Q2 — Quantitative data', type:'radio',
+     explain:"Heart rate in bpm is numerical and measurable — that's quantitative. Qualitative data is descriptive, not numerical."},
+    {name:'q3', label:'Q3 — Unstructured data', type:'radio',
+     explain:"Emails are free-form text with no fixed fields, so they're unstructured. Spreadsheets, databases and coded tables all have a defined structure."},
+    {name:'q4', label:'Q4 — Raw vs processed data', type:'radio',
+     explain:"Once figures are cleaned, sorted and summarised, they've been transformed into usable information — that's processed data, not raw."},
+    {name:'q5', label:'Q5 — Data bias', type:'checkbox',
+     explain:"Both flagged situations under-represent parts of the population — visitors-only excludes non-visitors, English-only excludes non-English speakers. Random sampling and automatic sensor logging don't introduce this kind of bias."},
+    {name:'q6', label:'Q6 — Primary vs secondary data', type:'radio',
+     explain:"The company didn't collect the census data itself — it's reusing data collected by someone else (the ABS) for a different original purpose. That makes it secondary data."},
+    {name:'q7', label:'Q7 — Likes/emoticons as data', type:'radio',
+     explain:"Likes and emoticons are an informal, newer data source that lacks the context a written response would give — hence 'alternative data with limited context', not structured or reliable interval data."},
+  ];
+
+  function buildMcqFeedback(){
+    const box = document.getElementById('mcqFeedbackBox');
+    let html = '';
+    mcqQuestions.forEach(q=>{
+      const inputs = Array.from(document.querySelectorAll(`input[name="${q.name}"]`));
+      const correctVals = inputs.filter(i=>i.dataset.correct==='true').map(i=>i.value);
+      const selectedVals = inputs.filter(i=>i.checked).map(i=>i.value);
+      const isCorrect = correctVals.length === selectedVals.length && correctVals.every(v=>selectedVals.includes(v));
+      const answered = selectedVals.length > 0;
+      let pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
+      let pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
+      html += `<div class="mcq-row"><span>${q.label}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
+      html += `<div style="font-size:.85rem; color:var(--ink-soft); margin:2px 0 6px 2px;">
+                 <b>Your answer:</b> ${answered ? selectedVals.join(', ') : '<i>no answer given</i>'}<br>
+                 <b>Correct answer:</b> ${correctVals.join(', ')}
+               </div>`;
+      if(!isCorrect){
+        html += `<div class="explain-line">💡 ${q.explain}</div>`;
+      }
+      html += `<div style="height:10px;"></div>`;
+    });
+    box.innerHTML = html;
   }
-  function renderCheck(){
-    timerDisplay.textContent = fmt(checkSeconds);
-    timerDisplay.style.color = (checkSeconds<=60) ? '#F4C97A' : '#fff';
+
+  // ---- Ordering feedback ----
+  const correctOrder = {o2:'1', o3:'2', o1:'3', o4:'4'};
+  const orderLabels = {o1:'Clean and process the raw data', o2:'Determine collection/sampling method', o3:'Collect the raw data', o4:'Analyse and present findings'};
+  function buildOrderFeedback(){
+    const box = document.getElementById('orderFeedbackBox');
+    let html = '';
+    let allCorrect = true;
+    Object.keys(correctOrder).forEach(key=>{
+      const sel = document.querySelector(`select[data-order="${key}"]`);
+      const studentVal = sel ? sel.value : '';
+      const correctVal = correctOrder[key];
+      const answered = studentVal !== '';
+      const isCorrect = studentVal === correctVal;
+      if(!isCorrect) allCorrect = false;
+      const pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
+      const pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
+      html += `<div class="mcq-row"><span>${orderLabels[key]}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
+      html += `<div style="font-size:.85rem; color:var(--ink-soft); margin:2px 0 6px 2px;">
+                 <b>Your position:</b> ${answered ? studentVal : '<i>no answer given</i>'} &nbsp; | &nbsp; <b>Correct position:</b> ${correctVal}
+               </div>`;
+    });
+    if(!allCorrect){
+      html += `<div class="explain-line">💡 Correct sequence: 1. Determine collection/sampling method → 2. Collect raw data → 3. Clean and process → 4. Analyse and present. You must know what you're collecting and how before you collect it, and data must be cleaned before it can be meaningfully analysed.</div>`;
+    }
+    box.innerHTML = html;
+  }
+
+  // ---- Classification feedback ----
+  const correctClass = {c1:'Ordinal', c2:'Nominal', c3:'Interval', c4:'Ratio', c5:'Ordinal', c6:'Nominal'};
+  const classLabels = {c1:'Customer satisfaction rating (1–5 stars)', c2:'Customer postcode', c3:'Store temperature in °C', c4:'Number of items purchased', c5:"T-shirt size (S/M/L/XL)", c6:'Customer phone number'};
+  const classExplain = {
+    c1:"Star ratings have a meaningful order but unequal gaps between values — that's ordinal.",
+    c2:"Postcodes are labels with no order or numeric meaning — that's nominal.",
+    c3:"°C has equal intervals but no true zero (0°C isn't 'no temperature') — that's interval.",
+    c4:"A count of items has a true zero and equal intervals — that's ratio.",
+    c5:"Sizes have a meaningful order (S<M<L<XL) but the 'gap' between sizes isn't numerically equal — that's ordinal.",
+    c6:"Phone numbers are labels, not quantities — that's nominal."
+  };
+  function buildClassifyFeedback(){
+    const box = document.getElementById('classifyFeedbackBox');
+    let html = '';
+    Object.keys(correctClass).forEach(key=>{
+      const sel = document.querySelector(`select[name="${key}"]`);
+      const studentVal = sel ? sel.value : '';
+      const correctVal = correctClass[key];
+      const answered = studentVal !== '';
+      const isCorrect = studentVal === correctVal;
+      const pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
+      const pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
+      html += `<div class="mcq-row"><span>${classLabels[key]}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
+      html += `<div style="font-size:.85rem; color:var(--ink-soft); margin:2px 0 6px 2px;">
+                 <b>Your answer:</b> ${answered ? studentVal : '<i>no answer given</i>'} &nbsp; | &nbsp; <b>Correct answer:</b> ${correctVal}
+               </div>`;
+      if(!isCorrect){
+        html += `<div class="explain-line">💡 ${classExplain[key]}</div>`;
+      }
+    });
+    box.innerHTML = html;
+  }
+
+  function mirrorTextAnswers(){
+    document.querySelectorAll('.your-answer-box[data-mirror]').forEach(box=>{
+      const key = box.dataset.mirror;
+      const source = document.querySelector(`textarea[data-key="${key}"]`);
+      const val = source ? source.value.trim() : '';
+      if(val){
+        box.textContent = val;
+        box.classList.remove('empty');
+      } else {
+        box.textContent = '(no answer given)';
+        box.classList.add('empty');
+      }
+    });
   }
 
   function goToCheck(){
     if(phase !== 'write') return;
     phase = 'check';
     clearInterval(interval);
+    buildMcqFeedback();
+    buildOrderFeedback();
+    buildClassifyFeedback();
+    mirrorTextAnswers();
     phaseWrite.classList.add('hidden');
     phaseCheck.classList.remove('hidden');
     step1.classList.remove('active'); step1.classList.add('done');
@@ -509,13 +624,16 @@
   document.getElementById('discussBtn').addEventListener('click', goToDiscuss);
 
   // ---- Autosave ----
-  const STORAGE_KEY = 'day1_data_fundamentals_v2';
+  const STORAGE_KEY = 'day1_data_fundamentals_v3';
   function saveAll(){
     const data = {};
     document.querySelectorAll('textarea[data-key], input.short-fix[data-key]').forEach(t=>{ data[t.dataset.key] = t.value; });
     document.querySelectorAll('select.class-select').forEach(sel=>{ data['sel_'+sel.name] = sel.value; });
     document.querySelectorAll('select[data-order]').forEach(sel=>{ data['order_'+sel.dataset.order] = sel.value; });
     document.querySelectorAll('select[data-selfmark]').forEach(sel=>{ data['mark_'+sel.dataset.selfmark] = sel.value; });
+    document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i=>{
+      data['chk_'+i.name+'_'+i.value] = i.checked;
+    });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
   document.addEventListener('input', saveAll);
@@ -537,6 +655,9 @@
       });
       document.querySelectorAll('select[data-selfmark]').forEach(sel=>{
         if(data['mark_'+sel.dataset.selfmark]) sel.value = data['mark_'+sel.dataset.selfmark];
+      });
+      document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i=>{
+        if(data['chk_'+i.name+'_'+i.value]) i.checked = true;
       });
     }catch(e){ console.warn('Restore failed', e); }
   });
