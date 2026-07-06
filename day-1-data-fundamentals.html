@@ -101,6 +101,16 @@
   .pill.blank{background:#EEE; color:#888;}
   .explain-line{ font-size:.83rem; color:var(--ink-soft); background:var(--amber-pale); border-radius:6px; padding:8px 10px; margin-top:8px; }
 
+  .opt-fb{ display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-radius:8px; font-size:.89rem; margin-bottom:4px; }
+  .opt-fb .tag{ font-size:.7rem; font-weight:700; margin-left:auto; white-space:nowrap; padding-left:10px; }
+  .opt-correct-selected{ background:var(--ok-bg); }
+  .opt-correct-selected .tag{color:var(--ok-txt);}
+  .opt-correct-missed{ background:#FFF6E0; border:1px dashed var(--amber);}
+  .opt-correct-missed .tag{color:#8A6A1D;}
+  .opt-wrong-selected{ background:var(--bad-bg);}
+  .opt-wrong-selected .tag{color:var(--bad-txt);}
+  .opt-neutral{ background:transparent; color:var(--ink-soft);}
+
   #phaseWrite.hidden, #phaseCheck.hidden, #phaseDiscuss.hidden{display:none;}
   .progress-note{ text-align:center; font-size:.8rem; color:var(--ink-soft); margin-top:10px; }
 
@@ -491,14 +501,20 @@
       let pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
       let pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
       html += `<div class="mcq-row"><span>${q.label}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
-      html += `<div style="font-size:.85rem; color:var(--ink-soft); margin:2px 0 6px 2px;">
-                 <b>Your answer:</b> ${answered ? selectedVals.join(', ') : '<i>no answer given</i>'}<br>
-                 <b>Correct answer:</b> ${correctVals.join(', ')}
-               </div>`;
+      inputs.forEach(i=>{
+        const isOptCorrect = i.dataset.correct === 'true';
+        const isSelected = i.checked;
+        let cls, icon, tag;
+        if(isOptCorrect && isSelected){ cls='opt-correct-selected'; icon='✅'; tag='Your answer — correct'; }
+        else if(isOptCorrect && !isSelected){ cls='opt-correct-missed'; icon='⭕'; tag="Correct — you didn't select this"; }
+        else if(!isOptCorrect && isSelected){ cls='opt-wrong-selected'; icon='❌'; tag='Your answer — incorrect'; }
+        else { cls='opt-neutral'; icon='▫️'; tag=''; }
+        html += `<div class="opt-fb ${cls}"><span>${icon}</span><span>${i.value}</span>${tag ? `<span class="tag">${tag}</span>` : ''}</div>`;
+      });
       if(!isCorrect){
         html += `<div class="explain-line">💡 ${q.explain}</div>`;
       }
-      html += `<div style="height:10px;"></div>`;
+      html += `<div style="height:14px;"></div>`;
     });
     box.innerHTML = html;
   }
