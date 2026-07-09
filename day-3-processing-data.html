@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Processing Data — Trial Exam Day 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F5F6FA; --card: #FFFFFF; --ink: #1E2233; --ink-soft: #565C74;
+    --blue: #3E5AA8; --blue-deep: #29396E; --blue-pale: #E4E8F5;
+    --amber: #E3A93F; --amber-pale: #FBF0DC;
+    --line: #DEE1EE; --danger: #C2542E;
+    --ok-bg:#E4F6E9; --ok-txt:#1E7A3D; --bad-bg:#FBE9E5; --bad-txt:#B5432A;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; line-height:1.55; padding-bottom:80px; }
+  h1,h2,h3{font-family:'Fraunces',serif; margin:0 0 4px;}
+  .wrap{max-width:840px; margin:0 auto; padding:0 20px;}
+
+  header{ background:var(--blue-deep); color:#fff; padding:28px 0 0; }
+  .head-top{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap;}
+  .eyebrow{ text-transform:uppercase; letter-spacing:.14em; font-size:.72rem; color:#AEBBE8; font-weight:600; }
+  header h1{font-size:1.6rem; color:#fff; font-weight:600;}
+  .subtitle{color:#C7D0EE; font-size:.92rem; margin-top:2px;}
+  .timer-box{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); border-radius:10px; padding:10px 18px; text-align:center; min-width:170px; }
+  .timer-box .label{font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; color:#AEBBE8;}
+  .timer-box .time{font-family:'JetBrains Mono',monospace; font-size:1.7rem; font-weight:500; color:#fff;}
+
+  .stepper{ display:flex; margin-top:26px; border-top:1px solid rgba(255,255,255,.15); }
+  .step{ flex:1; padding:14px 8px 16px; text-align:center; font-size:.82rem; font-weight:600; color:#7C8ACB; border-bottom:3px solid transparent; }
+  .step .num{ display:inline-block; width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,.12); color:#AEBBE8; font-size:.7rem; line-height:20px; margin-right:6px; }
+  .step.active{color:#fff; border-bottom-color:var(--amber);}
+  .step.active .num{background:var(--amber); color:var(--blue-deep);}
+  .step.done{color:#C7D0EE;}
+  .step.done .num{background:#6E82C7; color:#fff;}
+
+  main{padding-top:30px;}
+  .banner{ background:var(--amber-pale); border:1px solid #EFD9AC; border-radius:10px; padding:14px 18px; font-size:.9rem; color:#6B4F17; margin-bottom:26px; }
+  .banner b{color:#4A3610;}
+  .banner.locked{background:var(--blue-pale); border-color:#C5CDEB; color:var(--blue-deep);}
+  .banner.discuss{background:#F0EAF9; border-color:#D9C9F0; color:#4B3272;}
+  .banner.excel{background:#EAF3EA; border-color:#BFDFC0; color:#265C29;}
+
+  .section-title{ display:flex; align-items:baseline; gap:10px; margin:38px 0 6px; }
+  .section-title h2{font-size:1.15rem; color:var(--blue-deep);}
+  .section-title .marks{ font-size:.78rem; color:var(--ink-soft); font-weight:600; background:var(--blue-pale); padding:2px 9px; border-radius:20px; }
+  .section-desc{font-size:.86rem; color:var(--ink-soft); margin-bottom:16px;}
+
+  .q{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:16px; }
+  .q-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:10px;}
+  .q-num{font-weight:700; color:var(--blue-deep);}
+  .q-marks{font-size:.76rem; color:var(--ink-soft); font-weight:600; white-space:nowrap;}
+  .q-text{margin-bottom:12px; font-size:.98rem;}
+  .scenario-box{ background:#F2F4FB; border-left:3px solid var(--blue); padding:10px 14px; font-size:.9rem; border-radius:0 6px 6px 0; margin-bottom:12px; }
+
+  .opt{ display:flex; align-items:flex-start; gap:9px; padding:9px 10px; border-radius:8px; font-size:.93rem; cursor:pointer; border:1px solid transparent; }
+  .opt:hover{background:var(--blue-pale);}
+  .opt input{margin-top:3px;}
+
+  .verb-tip{ background:var(--amber-pale); border-left:3px solid var(--amber); padding:8px 12px; font-size:.85rem; color:#6B4F17; border-radius:0 6px 6px 0; margin-bottom:12px; }
+  .research{ font-size:.85rem; color:var(--ink-soft); background:var(--blue-pale); border-radius:8px; padding:10px 14px; margin-bottom:12px; }
+  .research ul{margin:4px 0 0 18px; padding:0;}
+
+  textarea, input.text-ans{ width:100%; border:1px solid var(--line); border-radius:8px; padding:12px 14px; font-family:'Inter',sans-serif; font-size:.93rem; color:var(--ink); resize:vertical; background:#FCFDFF; }
+  textarea:focus, input.text-ans:focus{outline:2px solid var(--blue); outline-offset:1px;}
+  .frame{ font-size:.83rem; color:var(--blue-deep); background:#fff; border:1px dashed #C5CDEB; border-radius:8px; padding:10px 12px; margin-bottom:8px; font-style:italic; }
+
+  select.class-select{ padding:6px 10px; border-radius:6px; border:1px solid var(--line); font-family:'Inter',sans-serif; font-size:.88rem; background:#fff; }
+  table.classify{width:100%; border-collapse:collapse; font-size:.92rem;}
+  table.classify td{padding:10px 6px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  table.classify td.scenario{width:60%;}
+
+  table.dataset{ width:100%; border-collapse:collapse; font-size:.88rem; margin:10px 0; }
+  table.dataset th{ background:var(--blue-pale); color:var(--blue-deep); padding:7px 10px; text-align:left; font-weight:700; }
+  table.dataset td{ padding:6px 10px; border-bottom:1px solid var(--line); font-family:'JetBrains Mono',monospace; }
+
+  .finish-bar{ position:sticky; bottom:0; background:var(--card); border-top:1px solid var(--line); padding:14px 0; margin-top:34px; text-align:center; }
+  button.primary{ background:var(--blue); color:#fff; border:none; padding:13px 30px; border-radius:30px; font-family:'Inter',sans-serif; font-weight:600; font-size:.95rem; cursor:pointer; transition:background .15s; }
+  button.primary:hover{background:var(--blue-deep);}
+  .hint{font-size:.78rem; color:var(--ink-soft); margin-top:8px;}
+
+  .model-label{ font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--blue-deep); margin-bottom:6px; }
+  .model-box{ background:var(--blue-pale); border-radius:8px; padding:12px 14px; font-size:.9rem; margin-bottom:12px; }
+  .criteria-box{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 14px; font-size:.85rem; margin-bottom:12px; }
+  .criteria-box ul{margin:4px 0 0 18px; padding:0;}
+  .self-mark{ display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .self-mark label{font-size:.83rem; color:var(--ink-soft); font-weight:600;}
+  .self-mark select{padding:5px 8px; border-radius:6px; border:1px solid var(--line);}
+  .rewrite-label{ font-size:.85rem; font-weight:600; color:var(--danger); margin-bottom:6px; }
+  .short-fix{width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-family:'Inter',sans-serif; font-size:.87rem;}
+
+  .your-answer-label{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--ink-soft); margin-bottom:6px;}
+  .your-answer-box{ background:#FAFAFB; border:1px solid var(--line); border-radius:8px; padding:12px 14px; font-size:.9rem; margin-bottom:12px; white-space:pre-wrap; }
+  .your-answer-box.empty{ color:#A9AFC4; font-style:italic; }
+
+  .mcq-row{ display:flex; justify-content:space-between; align-items:center; padding:7px 4px; border-bottom:1px solid var(--line); font-size:.9rem; gap:10px; }
+  .mcq-row:last-child{border-bottom:none;}
+  .pill{ font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:20px; white-space:nowrap; }
+  .pill.ok{background:var(--ok-bg); color:var(--ok-txt);}
+  .pill.bad{background:var(--bad-bg); color:var(--bad-txt);}
+  .pill.blank{background:#EEE; color:#888;}
+  .explain-line{ font-size:.83rem; color:var(--ink-soft); background:var(--blue-pale); border-radius:6px; padding:8px 10px; margin-top:8px; }
+
+  .opt-fb{ display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-radius:8px; font-size:.89rem; margin-bottom:4px; }
+  .opt-fb .tag{ font-size:.7rem; font-weight:700; margin-left:auto; white-space:nowrap; padding-left:10px; }
+  .opt-correct-selected{ background:var(--ok-bg); }
+  .opt-correct-selected .tag{color:var(--ok-txt);}
+  .opt-correct-missed{ background:#FFF6E0; border:1px dashed var(--amber);}
+  .opt-correct-missed .tag{color:#8A6A1D;}
+  .opt-wrong-selected{ background:var(--bad-bg);}
+  .opt-wrong-selected .tag{color:var(--bad-txt);}
+  .opt-neutral{ background:transparent; color:var(--ink-soft);}
+
+  #phaseWrite.hidden, #phaseCheck.hidden, #phaseDiscuss.hidden{display:none;}
+  .progress-note{ text-align:center; font-size:.8rem; color:var(--ink-soft); margin-top:10px; }
+
+  @media(max-width:600px){ .head-top{flex-direction:column;} .stepper{flex-wrap:wrap;} .step{flex:1 1 33%;} table.dataset{font-size:.78rem;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="head-top">
+      <div>
+        <div class="eyebrow">Enterprise Computing · Trial Prep · Day 3 of 5</div>
+        <h1>Processing Data</h1>
+        <div class="subtitle">Spreadsheets, databases, SQL &amp; machine learning</div>
+      </div>
+      <div class="timer-box">
+        <div class="label" id="timerLabel">Writing time remaining</div>
+        <div class="time" id="timerDisplay">45:00</div>
+      </div>
+    </div>
+    <div class="stepper">
+      <div class="step active" id="step1"><span class="num">1</span>Write (45 min)</div>
+      <div class="step" id="step2"><span class="num">2</span>Self-Check (5 min)</div>
+      <div class="step" id="step3"><span class="num">3</span>Discuss (10 min)</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= WRITE PHASE ================= -->
+  <div id="phaseWrite">
+    <div class="banner">
+      <b>Independent work — no model answers visible.</b> Work through every section using your own knowledge and the research prompts. Pace yourself — roughly 1 minute per mark. Self-Check unlocks when the timer ends or you click Finish below.
+    </div>
+    <div class="banner excel">
+      <b>You will need Microsoft Excel or Google Sheets for Section III.</b> Have it open and ready before you start the timer — you won't be able to pause it.
+    </div>
+
+    <div class="section-title"><h2>Section I — Multiple Choice</h2><span class="marks">7 marks</span></div>
+    <div class="section-desc">Most questions have more than one correct answer — read every option carefully before deciding.</div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q1</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are legitimate uses of a <b>pivot table</b> in spreadsheet software?</div>
+      <label class="opt"><input type="checkbox" name="q1" value="Summarising thousands of rows of sales data into totals by region and month" data-correct="true"> Summarising thousands of rows of sales data into totals by region and month</label>
+      <label class="opt"><input type="checkbox" name="q1" value="Allowing users to dynamically filter and rearrange summarised data without altering the original dataset" data-correct="true"> Allowing users to dynamically filter and rearrange summarised data without altering the original dataset</label>
+      <label class="opt"><input type="checkbox" name="q1" value="Encrypting sensitive data before storage"> Encrypting sensitive data before storage</label>
+      <label class="opt"><input type="checkbox" name="q1" value="Automatically correcting spelling errors in text fields"> Automatically correcting spelling errors in text fields</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q2</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are genuine advantages of a <b>relational</b> database over a flat-file database for enterprise data?</div>
+      <label class="opt"><input type="checkbox" name="q2" value="Reduces data duplication by storing related information in separate, linked tables" data-correct="true"> Reduces data duplication by storing related information in separate, linked tables</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Helps maintain data integrity through defined relationships between tables" data-correct="true"> Helps maintain data integrity through defined relationships between tables</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Requires no planning or data dictionary to design"> Requires no planning or data dictionary to design</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Stores all data in a single unstructured table for simplicity"> Stores all data in a single unstructured table for simplicity</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q3</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">In SQL, which of the following clauses are used to <b>filter or sort</b> returned records?</div>
+      <label class="opt"><input type="checkbox" name="q3" value="WHERE" data-correct="true"> WHERE</label>
+      <label class="opt"><input type="checkbox" name="q3" value="ORDER BY" data-correct="true"> ORDER BY</label>
+      <label class="opt"><input type="checkbox" name="q3" value="INSERT"> INSERT</label>
+      <label class="opt"><input type="checkbox" name="q3" value="CREATE"> CREATE</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q4</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are realistic examples of machine learning supporting enterprise data analytics?</div>
+      <label class="opt"><input type="checkbox" name="q4" value="Predicting future sales trends based on historical purchase patterns" data-correct="true"> Predicting future sales trends based on historical purchase patterns</label>
+      <label class="opt"><input type="checkbox" name="q4" value="Automatically classifying customer support tickets by urgency" data-correct="true"> Automatically classifying customer support tickets by urgency</label>
+      <label class="opt"><input type="checkbox" name="q4" value="Manually formatting a spreadsheet's font and colour scheme"> Manually formatting a spreadsheet's font and colour scheme</label>
+      <label class="opt"><input type="checkbox" name="q4" value="Guaranteeing 100% accurate future predictions"> Guaranteeing 100% accurate future predictions</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q5</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are valid uses of <b>conditional formatting</b> in a spreadsheet?</div>
+      <label class="opt"><input type="checkbox" name="q5" value="Highlighting sales figures that fall below a target threshold" data-correct="true"> Highlighting sales figures that fall below a target threshold</label>
+      <label class="opt"><input type="checkbox" name="q5" value="Automatically flagging duplicate customer entries with a different colour" data-correct="true"> Automatically flagging duplicate customer entries with a different colour</label>
+      <label class="opt"><input type="checkbox" name="q5" value="Permanently deleting rows that don't meet a condition"> Permanently deleting rows that don't meet a condition</label>
+      <label class="opt"><input type="checkbox" name="q5" value="Converting text data into a relational database automatically"> Converting text data into a relational database automatically</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q6</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are typically found in a <b>data dictionary</b> for a relational database?</div>
+      <label class="opt"><input type="checkbox" name="q6" value="Field names and data types for each table" data-correct="true"> Field names and data types for each table</label>
+      <label class="opt"><input type="checkbox" name="q6" value="Descriptions of relationships between tables, including primary and foreign keys" data-correct="true"> Descriptions of relationships between tables, including primary and foreign keys</label>
+      <label class="opt"><input type="checkbox" name="q6" value="The colour scheme of the reporting dashboard"> The colour scheme of the reporting dashboard</label>
+      <label class="opt"><input type="checkbox" name="q6" value="The specific font used in printed reports"> The specific font used in printed reports</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q7</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are genuine risks or limitations of using <b>statistical modelling</b> for prediction in an enterprise?</div>
+      <label class="opt"><input type="checkbox" name="q7" value="Predictions can be inaccurate if based on incomplete or biased historical data" data-correct="true"> Predictions can be inaccurate if based on incomplete or biased historical data</label>
+      <label class="opt"><input type="checkbox" name="q7" value="Models may not account for sudden, unprecedented changes in customer behaviour" data-correct="true"> Models may not account for sudden, unprecedented changes in customer behaviour</label>
+      <label class="opt"><input type="checkbox" name="q7" value="Models always improve automatically over time without any human input"> Models always improve automatically over time without any human input</label>
+      <label class="opt"><input type="checkbox" name="q7" value="Statistical models eliminate the need for any data collection"> Statistical models eliminate the need for any data collection</label>
+    </div>
+
+    <div class="section-title"><h2>Section II — Classification</h2><span class="marks">6 marks</span></div>
+    <div class="section-desc">Match each SQL task description to the correct clause/keyword.</div>
+    <div class="q">
+      <table class="classify">
+        <tr><td class="scenario">1. Combine matching records from two related tables using a common key field</td>
+          <td><select class="class-select" name="c1"><option value="">Select…</option><option>SELECT</option><option>WHERE</option><option>JOIN</option><option>ORDER BY</option><option>GROUP BY</option><option>INSERT</option></select></td></tr>
+        <tr><td class="scenario">2. Retrieve only records that meet a specific condition</td>
+          <td><select class="class-select" name="c2"><option value="">Select…</option><option>SELECT</option><option>WHERE</option><option>JOIN</option><option>ORDER BY</option><option>GROUP BY</option><option>INSERT</option></select></td></tr>
+        <tr><td class="scenario">3. Choose which columns/fields to display in the result</td>
+          <td><select class="class-select" name="c3"><option value="">Select…</option><option>SELECT</option><option>WHERE</option><option>JOIN</option><option>ORDER BY</option><option>GROUP BY</option><option>INSERT</option></select></td></tr>
+        <tr><td class="scenario">4. Arrange returned results in ascending or descending order</td>
+          <td><select class="class-select" name="c4"><option value="">Select…</option><option>SELECT</option><option>WHERE</option><option>JOIN</option><option>ORDER BY</option><option>GROUP BY</option><option>INSERT</option></select></td></tr>
+        <tr><td class="scenario">5. Summarise records into totals per category</td>
+          <td><select class="class-select" name="c5"><option value="">Select…</option><option>SELECT</option><option>WHERE</option><option>JOIN</option><option>ORDER BY</option><option>GROUP BY</option><option>INSERT</option></select></td></tr>
+        <tr><td class="scenario">6. Add a new record into a table</td>
+          <td><select class="class-select" name="c6"><option value="">Select…</option><option>SELECT</option><option>WHERE</option><option>JOIN</option><option>ORDER BY</option><option>GROUP BY</option><option>INSERT</option></select></td></tr>
+      </table>
+    </div>
+
+    <div class="section-title"><h2>Section III — Applied Spreadsheet Task</h2><span class="marks">6 marks</span></div>
+    <div class="section-desc">Open Microsoft Excel or Google Sheets now. Re-create the dataset below exactly as shown (Region in column A, Month in column B, Sales in column C, starting row 2).</div>
+    <div class="q">
+      <table class="dataset">
+        <tr><th>Region</th><th>Month</th><th>Sales ($)</th></tr>
+        <tr><td>North</td><td>March</td><td>4200</td></tr>
+        <tr><td>South</td><td>March</td><td>3100</td></tr>
+        <tr><td>North</td><td>April</td><td>5000</td></tr>
+        <tr><td>East</td><td>April</td><td>2800</td></tr>
+        <tr><td>West</td><td>April</td><td>3900</td></tr>
+        <tr><td>North</td><td>May</td><td>4700</td></tr>
+        <tr><td>South</td><td>May</td><td>3300</td></tr>
+        <tr><td>East</td><td>March</td><td>2500</td></tr>
+        <tr><td>West</td><td>March</td><td>3600</td></tr>
+        <tr><td>South</td><td>April</td><td>3000</td></tr>
+      </table>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q8</span><span class="q-marks">3 marks</span></div>
+      <div class="q-text">Use the <b>SUMIF</b> function to calculate the total sales for the <b>North</b> region across all months.</div>
+      <textarea rows="2" data-key="q8-value" placeholder="Enter the resulting total sales figure…"></textarea>
+      <div style="height:8px;"></div>
+      <textarea rows="2" data-key="q8-formula" placeholder="Enter the exact formula you used, e.g. =SUMIF(...)"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q9</span><span class="q-marks">3 marks</span></div>
+      <div class="q-text">Use the <b>AVERAGEIF</b> function (or a pivot table) to calculate the average sales figure for <b>April</b> across all regions.</div>
+      <textarea rows="2" data-key="q9-value" placeholder="Enter the resulting average sales figure…"></textarea>
+      <div style="height:8px;"></div>
+      <textarea rows="2" data-key="q9-formula" placeholder="Enter the exact formula you used, or briefly describe your pivot table steps"></textarea>
+    </div>
+
+    <div class="section-title"><h2>Section IV — Short Answer</h2><span class="marks">12 marks</span></div>
+    <div class="section-desc">Use the research prompts before writing. Roughly 50 words per response.</div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q10</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain"</b> = give reasons with supporting detail, not just a list.</div>
+      <div class="scenario-box">A rapidly growing online store currently keeps all customer, order and inventory data in one large spreadsheet.</div>
+      <div class="q-text">Explain why a relational database would likely be more suitable than a flat-file spreadsheet for this business as it grows.</div>
+      <div class="research">Before you write:<ul><li>Look up "data redundancy" and how relational databases reduce it.</li></ul></div>
+      <textarea rows="4" data-key="q10" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q11</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain"</b> = give reasons with supporting detail, not just a list.</div>
+      <div class="q-text">Explain how a data dictionary supports the design of a relational database.</div>
+      <div class="research">Before you write:<ul><li>Find an example of what a real data dictionary entry looks like (field name, type, description).</li></ul></div>
+      <textarea rows="4" data-key="q11" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain, with an example"</b> = a clear point AND a concrete illustration.</div>
+      <div class="q-text">Explain how SQL could be used to answer a specific business question, using an example.</div>
+      <div class="research">Before you write:<ul><li>Think of one real business question (e.g. "which product sold best last quarter?") and what SQL query could answer it.</li></ul></div>
+      <textarea rows="4" data-key="q12" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q13</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain"</b> = show cause and effect — how does X lead to Y?</div>
+      <div class="q-text">Explain one way an enterprise could use machine learning to support data-driven prediction.</div>
+      <div class="research">Before you write:<ul><li>Find one real example of a company using ML for prediction (e.g. demand forecasting, fraud detection).</li></ul></div>
+      <textarea rows="4" data-key="q13" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="section-title"><h2>Section V — Extended Response</h2><span class="marks">8 marks</span></div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q14(a)</span><span class="q-marks">5 marks (~100 words)</span></div>
+      <div class="verb-tip">💡 <b>"Assess"</b> = weigh up issues AND reach a clear judgement — description alone will not reach Band 6.</div>
+      <div class="scenario-box">The online store from Q10 is considering whether to migrate from its single spreadsheet to a relational database as order volume grows past several thousand transactions per month.</div>
+      <div class="q-text">Assess whether the business should migrate to a relational database, referring to data integrity, duplication and scalability.</div>
+      <div class="research">Before you write:<ul>
+        <li>What happens to a spreadsheet's usability once it holds tens of thousands of rows?</li>
+        <li>Find one real case of a business migrating from spreadsheets to a database system.</li>
+      </ul></div>
+      <div class="frame">Suggested structure: Issue with current approach → Benefit of the alternative → Overall judgement on whether migration is worthwhile.</div>
+      <textarea rows="6" data-key="q14a" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q14(b)</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Describe"</b> = give a clear, detailed account with a specific example.</div>
+      <div class="q-text">Describe one risk of the business relying solely on machine learning sales predictions without any human oversight.</div>
+      <textarea rows="4" data-key="q14b" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="finish-bar">
+      <button class="primary" id="finishBtn">Finish &amp; Unlock Self-Check</button>
+      <div class="hint">You can also wait for the timer — Self-Check unlocks automatically at 0:00.</div>
+    </div>
+  </div>
+
+  <!-- ================= SELF-CHECK PHASE ================= -->
+  <div id="phaseCheck" class="hidden">
+    <div class="banner locked">
+      <b>Self-Check — 5 minutes.</b> Your own answers now sit next to the correct answer/model answer. Move quickly: mark yourself against the criteria, and note in one line what you'd fix. We'll unpack anything still unclear as a class next.
+    </div>
+
+    <div class="section-title"><h2>Section I — Multiple Choice</h2></div>
+    <div class="q" id="mcqFeedbackBox"><!-- populated by JS --></div>
+
+    <div class="section-title"><h2>Section II — Classification</h2></div>
+    <div class="q" id="classifyFeedbackBox"><!-- populated by JS --></div>
+
+    <div class="section-title"><h2>Section III — Applied Spreadsheet Task</h2></div>
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q8</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q8-value">(no answer given)</div>
+      <div class="your-answer-label">Your formula</div>
+      <div class="your-answer-box empty" data-mirror="q8-formula">(no answer given)</div>
+      <div class="model-label">Correct Answer</div>
+      <div class="model-box"><b>13,900</b> — Formula: <code>=SUMIF(A2:A11,"North",C2:C11)</code><br>North appears in March (4200), April (5000) and May (4700): 4200+5000+4700 = 13,900.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Correct total AND correct SUMIF formula syntax</li>
+        <li><b>2 —</b> Correct total OR correct formula structure with a minor error</li>
+        <li><b>1 —</b> Attempted the task with a reasonable but incorrect approach</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q8"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q8-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q9</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q9-value">(no answer given)</div>
+      <div class="your-answer-label">Your formula / steps</div>
+      <div class="your-answer-box empty" data-mirror="q9-formula">(no answer given)</div>
+      <div class="model-label">Correct Answer</div>
+      <div class="model-box"><b>3,675</b> — Formula: <code>=AVERAGEIF(B2:B11,"April",C2:C11)</code><br>April sales: North 5000, East 2800, West 3900, South 3000 → total 14,700 ÷ 4 = 3,675.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Correct average AND correct AVERAGEIF formula (or accurate pivot table steps)</li>
+        <li><b>2 —</b> Correct average OR correct method with a minor calculation error</li>
+        <li><b>1 —</b> Attempted the task with a reasonable but incorrect approach</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q9"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q9-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="section-title"><h2>Section IV — Short Answer</h2></div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q10</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q10">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">A relational database reduces data redundancy by storing customer, order and inventory data in separate linked tables rather than repeating information across every row of one spreadsheet. This makes updates more reliable (e.g. changing a customer's address once, not everywhere it appears) and allows the business to scale to thousands of orders without slowing down or corrupting data.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains why a relational database suits this business, referencing redundancy and/or data integrity</li>
+        <li><b>2 —</b> Describes a relational database feature OR outlines a general limitation of spreadsheets</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q10"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q10-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q11</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q11">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">A data dictionary documents each field's name, data type, format and purpose across all tables, along with how tables relate through primary and foreign keys. This ensures consistency during design and development, so every table is built to work correctly together and future developers or team members understand the database's structure without guesswork.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains how a data dictionary supports relational database design, referencing its components</li>
+        <li><b>2 —</b> Describes what a data dictionary contains OR outlines a general benefit</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q11"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q11-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q12">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">SQL allows a business to query structured data directly, such as using a SELECT statement with WHERE and ORDER BY clauses to find "which product sold best last quarter." Rather than manually searching through records, the business gets an accurate, sorted answer instantly, which supports faster and more informed decision-making.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains how SQL answers a business question, supported by a specific example</li>
+        <li><b>2 —</b> Describes a general SQL function OR gives an example without full explanation</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q12"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q12-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q13</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q13">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">An enterprise could use machine learning to analyse historical sales data and predict future demand for specific products, allowing it to adjust stock levels in advance. For example, a retailer might use ML to forecast increased demand for umbrellas ahead of a predicted rainy season, reducing the risk of running out of stock or over-ordering.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains a specific machine learning application for prediction, supported by an example</li>
+        <li><b>2 —</b> Describes a general use of machine learning in enterprise analytics</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q13"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q13-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="section-title"><h2>Section V — Extended Response</h2></div>
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q14(a)</span><span class="q-marks">5 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q14a">(no answer given)</div>
+      <div class="model-label">Model Answer (Band 6 standard)</div>
+      <div class="model-box">As order volume grows into the thousands, a single spreadsheet becomes increasingly prone to data duplication (e.g. repeating customer details on every order row), slower performance, and a higher risk of human error when manually updating records. A relational database addresses this by storing customers, orders and inventory in separate linked tables, maintaining data integrity through defined relationships and allowing efficient querying even at large scale. While migration involves upfront cost and a learning curve, the long-term gains in accuracy, scalability and reduced redundancy make it a worthwhile investment for a business growing at this rate.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>5 —</b> Makes an informed judgement about migration, supported by comprehensive reference to data integrity, duplication and scalability</li>
+        <li><b>3-4 —</b> Makes a judgement about migration, supported by reference to at least two of: integrity, duplication, scalability</li>
+        <li><b>2 —</b> Describes a limitation of spreadsheets or a benefit of relational databases</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q14a"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+      <div class="rewrite-label">In one or two sentences, what would push your answer up a band?</div>
+      <textarea rows="3" data-key="q14a-rewrite" placeholder="e.g. I described a benefit but never reached an explicit judgement…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q14(b)</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q14b">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">If the business relies solely on machine learning predictions without human oversight, it risks over-ordering or under-ordering stock when an unexpected event (e.g. a sudden trend or supply disruption) isn't reflected in historical data the model was trained on. Human review helps catch these blind spots and adjust for context the model can't anticipate.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Describes a risk of relying solely on ML predictions, supported by an example</li>
+        <li><b>2 —</b> Outlines a general risk of over-relying on ML</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q14b"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q14b-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="finish-bar">
+      <button class="primary" id="discussBtn">Done — Ready to Discuss</button>
+      <div class="hint">Self-Check will also advance automatically when its timer ends.</div>
+    </div>
+  </div>
+
+  <!-- ================= DISCUSS PHASE ================= -->
+  <div id="phaseDiscuss" class="hidden">
+    <div class="banner discuss">
+      <b>Class discussion — 10 minutes.</b> Put your device down. Bring your one-line "fixes" and Q14 rewrite to the discussion — your teacher will unpack the questions the class found hardest.
+    </div>
+    <div class="progress-note">Well done — that's the full 60-minute cycle for Day 3.</div>
+  </div>
+
+</main>
+
+<script>
+  const timerDisplay = document.getElementById('timerDisplay');
+  const timerLabel = document.getElementById('timerLabel');
+  const phaseWrite = document.getElementById('phaseWrite');
+  const phaseCheck = document.getElementById('phaseCheck');
+  const phaseDiscuss = document.getElementById('phaseDiscuss');
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const step3 = document.getElementById('step3');
+
+  let phase = 'write';
+  let writeSeconds = 45 * 60;
+  let checkSeconds = 5 * 60;
+  let interval;
+
+  function fmt(sec){
+    const m = Math.floor(sec/60).toString().padStart(2,'0');
+    const s = (sec%60).toString().padStart(2,'0');
+    return m+':'+s;
+  }
+  function renderWrite(){ timerDisplay.textContent = fmt(writeSeconds); timerDisplay.style.color = (writeSeconds<=300) ? '#F4C97A' : '#fff'; }
+  function renderCheck(){ timerDisplay.textContent = fmt(checkSeconds); timerDisplay.style.color = (checkSeconds<=60) ? '#F4C97A' : '#fff'; }
+
+  const mcqQuestions = [
+    {name:'q1', label:'Q1 — Pivot table uses', type:'checkbox',
+     explain:"Pivot tables summarise and let users dynamically rearrange data without touching the original dataset. They don't encrypt data or fix spelling — those are unrelated spreadsheet/software functions."},
+    {name:'q2', label:'Q2 — Relational vs flat-file', type:'checkbox',
+     explain:"Relational databases reduce duplication and maintain integrity through linked tables — but this requires careful planning and a data dictionary, not less. Storing everything in one unstructured table describes a flat-file, not a relational, database."},
+    {name:'q3', label:'Q3 — SQL filter/sort clauses', type:'checkbox',
+     explain:"WHERE filters records and ORDER BY sorts them. INSERT adds new records and CREATE builds a new table — neither filters or sorts existing data."},
+    {name:'q4', label:'Q4 — Machine learning in analytics', type:'checkbox',
+     explain:"ML genuinely supports prediction and automatic classification tasks. Manual formatting is a human task unrelated to ML, and no ML system can guarantee 100% accuracy — that's an overclaim."},
+    {name:'q5', label:'Q5 — Conditional formatting uses', type:'checkbox',
+     explain:"Conditional formatting highlights data visually based on rules — it doesn't delete data or convert a spreadsheet into a database; those require separate, deliberate actions."},
+    {name:'q6', label:'Q6 — Data dictionary components', type:'checkbox',
+     explain:"A data dictionary documents field names, data types and table relationships (keys) — it's about structure and meaning, not visual styling like colours or fonts."},
+    {name:'q7', label:'Q7 — Statistical modelling risks', type:'checkbox',
+     explain:"Models are limited by the data they're trained on and can miss sudden behavioural shifts. They don't improve automatically without human input, and they still rely on data being collected in the first place — both distractors overclaim what the technique can do."},
+  ];
+
+  function buildMcqFeedback(){
+    const box = document.getElementById('mcqFeedbackBox');
+    let html = '';
+    mcqQuestions.forEach(q=>{
+      const inputs = Array.from(document.querySelectorAll(`input[name="${q.name}"]`));
+      const correctVals = inputs.filter(i=>i.dataset.correct==='true').map(i=>i.value);
+      const selectedVals = inputs.filter(i=>i.checked).map(i=>i.value);
+      const isCorrect = correctVals.length === selectedVals.length && correctVals.every(v=>selectedVals.includes(v));
+      const answered = selectedVals.length > 0;
+      let pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
+      let pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
+      html += `<div class="mcq-row"><span>${q.label}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
+      inputs.forEach(i=>{
+        const isOptCorrect = i.dataset.correct === 'true';
+        const isSelected = i.checked;
+        let cls, icon, tag;
+        if(isOptCorrect && isSelected){ cls='opt-correct-selected'; icon='✅'; tag='Your answer — correct'; }
+        else if(isOptCorrect && !isSelected){ cls='opt-correct-missed'; icon='⭕'; tag="Correct — you didn't select this"; }
+        else if(!isOptCorrect && isSelected){ cls='opt-wrong-selected'; icon='❌'; tag='Your answer — incorrect'; }
+        else { cls='opt-neutral'; icon='▫️'; tag=''; }
+        html += `<div class="opt-fb ${cls}"><span>${icon}</span><span>${i.value}</span>${tag ? `<span class="tag">${tag}</span>` : ''}</div>`;
+      });
+      if(!isCorrect){
+        html += `<div class="explain-line">💡 ${q.explain}</div>`;
+      }
+      html += `<div style="height:14px;"></div>`;
+    });
+    box.innerHTML = html;
+  }
+
+  const correctClass = {c1:'JOIN', c2:'WHERE', c3:'SELECT', c4:'ORDER BY', c5:'GROUP BY', c6:'INSERT'};
+  const classLabels = {
+    c1:'Combine matching records from two related tables', c2:'Retrieve only records meeting a condition',
+    c3:'Choose which columns/fields to display', c4:'Arrange results in ascending/descending order',
+    c5:'Summarise records into totals per category', c6:'Add a new record into a table'
+  };
+  const classExplain = {
+    c1:"Combining related tables via a shared key field is exactly what JOIN does.",
+    c2:"WHERE is the clause used to filter records down to those meeting a condition.",
+    c3:"SELECT specifies which columns/fields appear in the query result.",
+    c4:"ORDER BY controls whether results are sorted ascending or descending.",
+    c5:"GROUP BY aggregates rows sharing a value so totals per category can be calculated.",
+    c6:"INSERT is the SQL command used to add a new row/record to a table."
+  };
+  function buildClassifyFeedback(){
+    const box = document.getElementById('classifyFeedbackBox');
+    let html = '';
+    Object.keys(correctClass).forEach(key=>{
+      const sel = document.querySelector(`select[name="${key}"]`);
+      const studentVal = sel ? sel.value : '';
+      const correctVal = correctClass[key];
+      const answered = studentVal !== '';
+      const isCorrect = studentVal === correctVal;
+      const pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
+      const pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
+      html += `<div class="mcq-row"><span>${classLabels[key]}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
+      html += `<div style="font-size:.85rem; color:var(--ink-soft); margin:2px 0 6px 2px;">
+                 <b>Your answer:</b> ${answered ? studentVal : '<i>no answer given</i>'} &nbsp; | &nbsp; <b>Correct answer:</b> ${correctVal}
+               </div>`;
+      if(!isCorrect){
+        html += `<div class="explain-line">💡 ${classExplain[key]}</div>`;
+      }
+    });
+    box.innerHTML = html;
+  }
+
+  function mirrorTextAnswers(){
+    document.querySelectorAll('.your-answer-box[data-mirror]').forEach(box=>{
+      const key = box.dataset.mirror;
+      const source = document.querySelector(`textarea[data-key="${key}"]`);
+      const val = source ? source.value.trim() : '';
+      if(val){
+        box.textContent = val;
+        box.classList.remove('empty');
+      } else {
+        box.textContent = '(no answer given)';
+        box.classList.add('empty');
+      }
+    });
+  }
+
+  function goToCheck(){
+    if(phase !== 'write') return;
+    phase = 'check';
+    clearInterval(interval);
+    buildMcqFeedback();
+    buildClassifyFeedback();
+    mirrorTextAnswers();
+    phaseWrite.classList.add('hidden');
+    phaseCheck.classList.remove('hidden');
+    step1.classList.remove('active'); step1.classList.add('done');
+    step2.classList.add('active');
+    timerLabel.textContent = 'Self-check time remaining';
+    renderCheck();
+    interval = setInterval(()=>{
+      if(checkSeconds>0){ checkSeconds--; renderCheck(); }
+      if(checkSeconds<=0){ goToDiscuss(); }
+    },1000);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function goToDiscuss(){
+    if(phase === 'discuss') return;
+    phase = 'discuss';
+    clearInterval(interval);
+    phaseCheck.classList.add('hidden');
+    phaseDiscuss.classList.remove('hidden');
+    step2.classList.remove('active'); step2.classList.add('done');
+    step3.classList.add('active');
+    timerLabel.textContent = 'Discussion';
+    timerDisplay.textContent = '10:00';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  interval = setInterval(()=>{
+    if(phase==='write'){
+      if(writeSeconds>0){ writeSeconds--; renderWrite(); }
+      if(writeSeconds<=0){ goToCheck(); }
+    }
+  },1000);
+  renderWrite();
+
+  document.getElementById('finishBtn').addEventListener('click', goToCheck);
+  document.getElementById('discussBtn').addEventListener('click', goToDiscuss);
+
+  const STORAGE_KEY = 'day3_processing_data_v1';
+  function saveAll(){
+    const data = {};
+    document.querySelectorAll('textarea[data-key], input.short-fix[data-key]').forEach(t=>{ data[t.dataset.key] = t.value; });
+    document.querySelectorAll('select.class-select').forEach(sel=>{ data['sel_'+sel.name] = sel.value; });
+    document.querySelectorAll('select[data-selfmark]').forEach(sel=>{ data['mark_'+sel.dataset.selfmark] = sel.value; });
+    document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i=>{
+      data['chk_'+i.name+'_'+i.value] = i.checked;
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+  document.addEventListener('input', saveAll);
+  document.addEventListener('change', saveAll);
+
+  window.addEventListener('load', ()=>{
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+      document.querySelectorAll('textarea[data-key], input.short-fix[data-key]').forEach(t=>{
+        if(data[t.dataset.key]) t.value = data[t.dataset.key];
+      });
+      document.querySelectorAll('select.class-select').forEach(sel=>{
+        if(data['sel_'+sel.name]) sel.value = data['sel_'+sel.name];
+      });
+      document.querySelectorAll('select[data-selfmark]').forEach(sel=>{
+        if(data['mark_'+sel.dataset.selfmark]) sel.value = data['mark_'+sel.dataset.selfmark];
+      });
+      document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i=>{
+        if(data['chk_'+i.name+'_'+i.value]) i.checked = true;
+      });
+    }catch(e){ console.warn('Restore failed', e); }
+  });
+</script>
+
+</body>
+</html>
