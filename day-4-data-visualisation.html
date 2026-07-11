@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Visualisation — Trial Exam Day 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F8F5FA; --card: #FFFFFF; --ink: #291F35; --ink-soft: #6A5C7A;
+    --violet: #6E4B9E; --violet-deep: #48326E; --violet-pale: #EAE1F5;
+    --amber: #E3A93F; --amber-pale: #FBF0DC;
+    --line: #E5DCEE; --danger: #C2542E;
+    --ok-bg:#E4F6E9; --ok-txt:#1E7A3D; --bad-bg:#FBE9E5; --bad-txt:#B5432A;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; line-height:1.55; padding-bottom:80px; }
+  h1,h2,h3{font-family:'Fraunces',serif; margin:0 0 4px;}
+  .wrap{max-width:840px; margin:0 auto; padding:0 20px;}
+
+  header{ background:var(--violet-deep); color:#fff; padding:28px 0 0; }
+  .head-top{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap;}
+  .eyebrow{ text-transform:uppercase; letter-spacing:.14em; font-size:.72rem; color:#CBB3E8; font-weight:600; }
+  header h1{font-size:1.6rem; color:#fff; font-weight:600;}
+  .subtitle{color:#DACBEE; font-size:.92rem; margin-top:2px;}
+  .timer-box{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); border-radius:10px; padding:10px 18px; text-align:center; min-width:170px; }
+  .timer-box .label{font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; color:#CBB3E8;}
+  .timer-box .time{font-family:'JetBrains Mono',monospace; font-size:1.7rem; font-weight:500; color:#fff;}
+
+  .stepper{ display:flex; margin-top:26px; border-top:1px solid rgba(255,255,255,.15); }
+  .step{ flex:1; padding:14px 8px 16px; text-align:center; font-size:.82rem; font-weight:600; color:#9878C4; border-bottom:3px solid transparent; }
+  .step .num{ display:inline-block; width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,.12); color:#CBB3E8; font-size:.7rem; line-height:20px; margin-right:6px; }
+  .step.active{color:#fff; border-bottom-color:var(--amber);}
+  .step.active .num{background:var(--amber); color:var(--violet-deep);}
+  .step.done{color:#DACBEE;}
+  .step.done .num{background:#8462B8; color:#fff;}
+
+  main{padding-top:30px;}
+  .banner{ background:var(--amber-pale); border:1px solid #EFD9AC; border-radius:10px; padding:14px 18px; font-size:.9rem; color:#6B4F17; margin-bottom:26px; }
+  .banner b{color:#4A3610;}
+  .banner.locked{background:var(--violet-pale); border-color:#D3C0EA; color:var(--violet-deep);}
+  .banner.discuss{background:#F0EAF9; border-color:#D9C9F0; color:#4B3272;}
+
+  .section-title{ display:flex; align-items:baseline; gap:10px; margin:38px 0 6px; }
+  .section-title h2{font-size:1.15rem; color:var(--violet-deep);}
+  .section-title .marks{ font-size:.78rem; color:var(--ink-soft); font-weight:600; background:var(--violet-pale); padding:2px 9px; border-radius:20px; }
+  .section-desc{font-size:.86rem; color:var(--ink-soft); margin-bottom:16px;}
+
+  .q{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:16px; }
+  .q-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:10px;}
+  .q-num{font-weight:700; color:var(--violet-deep);}
+  .q-marks{font-size:.76rem; color:var(--ink-soft); font-weight:600; white-space:nowrap;}
+  .q-text{margin-bottom:12px; font-size:.98rem;}
+  .scenario-box{ background:#F5F0FA; border-left:3px solid var(--violet); padding:10px 14px; font-size:.9rem; border-radius:0 6px 6px 0; margin-bottom:12px; }
+
+  .opt{ display:flex; align-items:flex-start; gap:9px; padding:9px 10px; border-radius:8px; font-size:.93rem; cursor:pointer; border:1px solid transparent; }
+  .opt:hover{background:var(--violet-pale);}
+  .opt input{margin-top:3px;}
+
+  .verb-tip{ background:var(--amber-pale); border-left:3px solid var(--amber); padding:8px 12px; font-size:.85rem; color:#6B4F17; border-radius:0 6px 6px 0; margin-bottom:12px; }
+  .research{ font-size:.85rem; color:var(--ink-soft); background:var(--violet-pale); border-radius:8px; padding:10px 14px; margin-bottom:12px; }
+  .research ul{margin:4px 0 0 18px; padding:0;}
+
+  textarea{ width:100%; border:1px solid var(--line); border-radius:8px; padding:12px 14px; font-family:'Inter',sans-serif; font-size:.93rem; color:var(--ink); resize:vertical; background:#FDFCFE; }
+  textarea:focus{outline:2px solid var(--violet); outline-offset:1px;}
+  .frame{ font-size:.83rem; color:var(--violet-deep); background:#fff; border:1px dashed #D3C0EA; border-radius:8px; padding:10px 12px; margin-bottom:8px; font-style:italic; }
+
+  select.class-select{ padding:6px 10px; border-radius:6px; border:1px solid var(--line); font-family:'Inter',sans-serif; font-size:.88rem; background:#fff; }
+  table.classify{width:100%; border-collapse:collapse; font-size:.92rem;}
+  table.classify td{padding:10px 6px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  table.classify td.scenario{width:60%;}
+
+  table.dataset{ width:100%; border-collapse:collapse; font-size:.9rem; margin:10px 0; }
+  table.dataset th{ background:var(--violet-pale); color:var(--violet-deep); padding:7px 10px; text-align:left; font-weight:700; }
+  table.dataset td{ padding:6px 10px; border-bottom:1px solid var(--line); font-family:'JetBrains Mono',monospace; }
+
+  .chart-box{ background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px; margin:14px 0; text-align:center; }
+  .chart-box svg{ max-width:100%; height:auto; }
+
+  .finish-bar{ position:sticky; bottom:0; background:var(--card); border-top:1px solid var(--line); padding:14px 0; margin-top:34px; text-align:center; }
+  button.primary{ background:var(--violet); color:#fff; border:none; padding:13px 30px; border-radius:30px; font-family:'Inter',sans-serif; font-weight:600; font-size:.95rem; cursor:pointer; transition:background .15s; }
+  button.primary:hover{background:var(--violet-deep);}
+  .hint{font-size:.78rem; color:var(--ink-soft); margin-top:8px;}
+
+  .model-label{ font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--violet-deep); margin-bottom:6px; }
+  .model-box{ background:var(--violet-pale); border-radius:8px; padding:12px 14px; font-size:.9rem; margin-bottom:12px; }
+  .criteria-box{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 14px; font-size:.85rem; margin-bottom:12px; }
+  .criteria-box ul{margin:4px 0 0 18px; padding:0;}
+  .self-mark{ display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .self-mark label{font-size:.83rem; color:var(--ink-soft); font-weight:600;}
+  .self-mark select{padding:5px 8px; border-radius:6px; border:1px solid var(--line);}
+  .rewrite-label{ font-size:.85rem; font-weight:600; color:var(--danger); margin-bottom:6px; }
+  .short-fix{width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-family:'Inter',sans-serif; font-size:.87rem;}
+
+  .your-answer-label{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--ink-soft); margin-bottom:6px;}
+  .your-answer-box{ background:#FAFAFB; border:1px solid var(--line); border-radius:8px; padding:12px 14px; font-size:.9rem; margin-bottom:12px; white-space:pre-wrap; }
+  .your-answer-box.empty{ color:#B2A4C2; font-style:italic; }
+
+  .mcq-row{ display:flex; justify-content:space-between; align-items:center; padding:7px 4px; border-bottom:1px solid var(--line); font-size:.9rem; gap:10px; }
+  .mcq-row:last-child{border-bottom:none;}
+  .pill{ font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:20px; white-space:nowrap; }
+  .pill.ok{background:var(--ok-bg); color:var(--ok-txt);}
+  .pill.bad{background:var(--bad-bg); color:var(--bad-txt);}
+  .pill.blank{background:#EEE; color:#888;}
+  .explain-line{ font-size:.83rem; color:var(--ink-soft); background:var(--violet-pale); border-radius:6px; padding:8px 10px; margin-top:8px; }
+
+  .opt-fb{ display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-radius:8px; font-size:.89rem; margin-bottom:4px; }
+  .opt-fb .tag{ font-size:.7rem; font-weight:700; margin-left:auto; white-space:nowrap; padding-left:10px; }
+  .opt-correct-selected{ background:var(--ok-bg); }
+  .opt-correct-selected .tag{color:var(--ok-txt);}
+  .opt-correct-missed{ background:#FFF6E0; border:1px dashed var(--amber);}
+  .opt-correct-missed .tag{color:#8A6A1D;}
+  .opt-wrong-selected{ background:var(--bad-bg);}
+  .opt-wrong-selected .tag{color:var(--bad-txt);}
+  .opt-neutral{ background:transparent; color:var(--ink-soft);}
+
+  #phaseWrite.hidden, #phaseCheck.hidden, #phaseDiscuss.hidden{display:none;}
+  .progress-note{ text-align:center; font-size:.8rem; color:var(--ink-soft); margin-top:10px; }
+
+  @media(max-width:600px){ .head-top{flex-direction:column;} .stepper{flex-wrap:wrap;} .step{flex:1 1 33%;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="head-top">
+      <div>
+        <div class="eyebrow">Enterprise Computing · Trial Prep · Day 4 of 5</div>
+        <h1>Data Visualisation</h1>
+        <div class="subtitle">Telling a story with data — and spotting when someone else is</div>
+      </div>
+      <div class="timer-box">
+        <div class="label" id="timerLabel">Writing time remaining</div>
+        <div class="time" id="timerDisplay">45:00</div>
+      </div>
+    </div>
+    <div class="stepper">
+      <div class="step active" id="step1"><span class="num">1</span>Write (45 min)</div>
+      <div class="step" id="step2"><span class="num">2</span>Self-Check (5 min)</div>
+      <div class="step" id="step3"><span class="num">3</span>Discuss (10 min)</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= WRITE PHASE ================= -->
+  <div id="phaseWrite">
+    <div class="banner">
+      <b>Independent work — no model answers visible.</b> Work through every section using your own knowledge and the research prompts. Pace yourself — roughly 1 minute per mark. Self-Check unlocks when the timer ends or you click Finish below.
+    </div>
+
+    <div class="section-title"><h2>Section I — Multiple Choice</h2><span class="marks">7 marks</span></div>
+    <div class="section-desc">Most questions have more than one correct answer — read every option carefully before deciding.</div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q1</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are legitimate purposes of data visualisation?</div>
+      <label class="opt"><input type="checkbox" name="q1" value="Simplifying a complex dataset so patterns are easier to understand" data-correct="true"> Simplifying a complex dataset so patterns are easier to understand</label>
+      <label class="opt"><input type="checkbox" name="q1" value="Highlighting the most significant results within a large dataset" data-correct="true"> Highlighting the most significant results within a large dataset</label>
+      <label class="opt"><input type="checkbox" name="q1" value="Permanently altering the underlying raw data to look better"> Permanently altering the underlying raw data to look better</label>
+      <label class="opt"><input type="checkbox" name="q1" value="Replacing the need to collect accurate data in the first place"> Replacing the need to collect accurate data in the first place</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q2</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are examples of <b>OLAP</b> (online analytical processing) in an enterprise context?</div>
+      <label class="opt"><input type="checkbox" name="q2" value="Quickly slicing multi-dimensional sales data by region, product and time period" data-correct="true"> Quickly slicing multi-dimensional sales data by region, product and time period</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Letting an analyst drill down from yearly totals into monthly detail" data-correct="true"> Letting an analyst drill down from yearly totals into monthly detail</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Permanently deleting historical records to save storage space"> Permanently deleting historical records to save storage space</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Automatically translating text between languages"> Automatically translating text between languages</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q3</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following describe how <b>data warehousing</b> supports data visualisation?</div>
+      <label class="opt"><input type="checkbox" name="q3" value="Storing years of historical data in one place, allowing trends to be compared with current data" data-correct="true"> Storing years of historical data in one place, allowing trends to be compared with current data</label>
+      <label class="opt"><input type="checkbox" name="q3" value="Enabling refinement and optimisation of large datasets before they're visualised" data-correct="true"> Enabling refinement and optimisation of large datasets before they're visualised</label>
+      <label class="opt"><input type="checkbox" name="q3" value="Guaranteeing that any resulting visualisation will be free of bias"> Guaranteeing that any resulting visualisation will be free of bias</label>
+      <label class="opt"><input type="checkbox" name="q3" value="Replacing the need for any data validation before visualising"> Replacing the need for any data validation before visualising</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q4</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are techniques that can introduce <b>bias</b> into a data visualisation?</div>
+      <label class="opt"><input type="checkbox" name="q4" value="Starting a bar chart's Y-axis at a value other than zero to exaggerate differences" data-correct="true"> Starting a bar chart's Y-axis at a value other than zero to exaggerate differences</label>
+      <label class="opt"><input type="checkbox" name="q4" value="Selectively choosing a time period that shows the most favourable trend" data-correct="true"> Selectively choosing a time period that shows the most favourable trend</label>
+      <label class="opt"><input type="checkbox" name="q4" value="Using a consistent colour scheme across all charts in a report"> Using a consistent colour scheme across all charts in a report</label>
+      <label class="opt"><input type="checkbox" name="q4" value="Labelling each axis clearly with its units"> Labelling each axis clearly with its units</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q5</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are genuine considerations when evaluating the <b>UX</b> (user experience) of a data visualisation?</div>
+      <label class="opt"><input type="checkbox" name="q5" value="Whether the visualisation is relevant and easy to interpret for its intended audience" data-correct="true"> Whether the visualisation is relevant and easy to interpret for its intended audience</label>
+      <label class="opt"><input type="checkbox" name="q5" value="Whether the visualisation allows some customisation or live/interactive analysis" data-correct="true"> Whether the visualisation allows some customisation or live/interactive analysis</label>
+      <label class="opt"><input type="checkbox" name="q5" value="Whether it uses the enterprise's most expensive software licence"> Whether it uses the enterprise's most expensive software licence</label>
+      <label class="opt"><input type="checkbox" name="q5" value="Whether the file size of the visualisation is as large as possible"> Whether the file size of the visualisation is as large as possible</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q6</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are genuine risks of interrogating a data visualisation without considering <b>outliers</b>?</div>
+      <label class="opt"><input type="checkbox" name="q6" value="A single extreme value could distort an average, misrepresenting the typical case" data-correct="true"> A single extreme value could distort an average, misrepresenting the typical case</label>
+      <label class="opt"><input type="checkbox" name="q6" value="Aggregated totals might hide meaningful variation between sub-groups" data-correct="true"> Aggregated totals might hide meaningful variation between sub-groups</label>
+      <label class="opt"><input type="checkbox" name="q6" value="Outliers always indicate the data was collected incorrectly"> Outliers always indicate the data was collected incorrectly</label>
+      <label class="opt"><input type="checkbox" name="q6" value="Removing an outlier always makes a dataset more accurate"> Removing an outlier always makes a dataset more accurate</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q7</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are valid criteria for evaluating the effectiveness of a software tool used to create a data visualisation?</div>
+      <label class="opt"><input type="checkbox" name="q7" value="Whether the tool suits the scale and complexity of the dataset being visualised" data-correct="true"> Whether the tool suits the scale and complexity of the dataset being visualised</label>
+      <label class="opt"><input type="checkbox" name="q7" value="Whether the intended audience can easily interpret the output it produces" data-correct="true"> Whether the intended audience can easily interpret the output it produces</label>
+      <label class="opt"><input type="checkbox" name="q7" value="Whether it's the newest tool available, regardless of the enterprise's actual needs"> Whether it's the newest tool available, regardless of the enterprise's actual needs</label>
+      <label class="opt"><input type="checkbox" name="q7" value="Whether it costs the least amount of money, regardless of what it can actually do"> Whether it costs the least amount of money, regardless of what it can actually do</label>
+    </div>
+
+    <div class="section-title"><h2>Section II — Classification</h2><span class="marks">6 marks</span></div>
+    <div class="section-desc">Match each scenario to the most suitable category of visualisation software.</div>
+    <div class="q">
+      <table class="classify">
+        <tr><td class="scenario">1. A retailer uses pivot tables and chart tools within its existing spreadsheet software to build a weekly sales dashboard.</td>
+          <td><select class="class-select" name="c1"><option value="">Select…</option><option>Spreadsheet dashboard</option><option>Presentation software</option><option>Business analytics "as a service"</option><option>Custom software solution</option></select></td></tr>
+        <tr><td class="scenario">2. A marketing team creates a set of polished slides summarising quarterly campaign results for a board meeting.</td>
+          <td><select class="class-select" name="c2"><option value="">Select…</option><option>Spreadsheet dashboard</option><option>Presentation software</option><option>Business analytics "as a service"</option><option>Custom software solution</option></select></td></tr>
+        <tr><td class="scenario">3. A company subscribes to a cloud-based platform that automatically generates real-time analytics dashboards without them managing any servers.</td>
+          <td><select class="class-select" name="c3"><option value="">Select…</option><option>Spreadsheet dashboard</option><option>Presentation software</option><option>Business analytics "as a service"</option><option>Custom software solution</option></select></td></tr>
+        <tr><td class="scenario">4. A large enterprise commissions developers to build a bespoke visualisation system tailored exactly to its unique data pipeline.</td>
+          <td><select class="class-select" name="c4"><option value="">Select…</option><option>Spreadsheet dashboard</option><option>Presentation software</option><option>Business analytics "as a service"</option><option>Custom software solution</option></select></td></tr>
+        <tr><td class="scenario">5. A small business uses built-in chart features in its existing spreadsheet to track monthly expenses.</td>
+          <td><select class="class-select" name="c5"><option value="">Select…</option><option>Spreadsheet dashboard</option><option>Presentation software</option><option>Business analytics "as a service"</option><option>Custom software solution</option></select></td></tr>
+        <tr><td class="scenario">6. A logistics company pays a subscription to a third-party analytics provider that hosts and updates its dashboards automatically.</td>
+          <td><select class="class-select" name="c6"><option value="">Select…</option><option>Spreadsheet dashboard</option><option>Presentation software</option><option>Business analytics "as a service"</option><option>Custom software solution</option></select></td></tr>
+      </table>
+    </div>
+
+    <div class="section-title"><h2>Section III — Chart Critique</h2><span class="marks">6 marks</span></div>
+    <div class="section-desc">Study the chart and data table below carefully before answering.</div>
+    <div class="q">
+      <div class="chart-box">
+        <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+          <text x="200" y="20" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#291F35">Quarterly Sales ($'000s) — Company X</text>
+          <line x1="50" y1="220" x2="370" y2="220" stroke="#B9AACB" stroke-width="1.5"/>
+          <line x1="50" y1="30" x2="50" y2="220" stroke="#B9AACB" stroke-width="1.5"/>
+          <text x="45" y="224" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#6A5C7A">800</text>
+          <text x="45" y="34" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#6A5C7A">1000</text>
+          <rect x="70" y="200" width="55" height="20" fill="#8462B8"/>
+          <text x="97" y="235" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#291F35">Q1</text>
+          <rect x="150" y="170" width="55" height="50" fill="#8462B8"/>
+          <text x="177" y="235" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#291F35">Q2</text>
+          <rect x="230" y="120" width="55" height="100" fill="#8462B8"/>
+          <text x="257" y="235" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#291F35">Q3</text>
+          <rect x="310" y="60" width="55" height="160" fill="#6E4B9E"/>
+          <text x="337" y="235" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#291F35">Q4</text>
+        </svg>
+      </div>
+      <table class="dataset">
+        <tr><th>Quarter</th><th>Sales ($'000)</th></tr>
+        <tr><td>Q1</td><td>820</td></tr>
+        <tr><td>Q2</td><td>850</td></tr>
+        <tr><td>Q3</td><td>900</td></tr>
+        <tr><td>Q4</td><td>960</td></tr>
+      </table>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q8</span><span class="q-marks">2 marks</span></div>
+      <div class="q-text">Using the data table above, calculate the actual percentage increase in sales from Q1 to Q4. Show your working.</div>
+      <textarea rows="3" data-key="q8" placeholder="Show your working and final answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q9</span><span class="q-marks">4 marks (~80 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain, and describe"</b> = identify the technique AND paint a clear picture of the accurate alternative.</div>
+      <div class="q-text">Explain the visual technique used in the chart above that makes this growth appear more dramatic than the data supports, and describe what an accurate version of this chart would show.</div>
+      <textarea rows="5" data-key="q9" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="section-title"><h2>Section IV — Short Answer</h2><span class="marks">12 marks</span></div>
+    <div class="section-desc">Use the research prompts before writing. Roughly 50 words per response.</div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q10</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain"</b> = give reasons with supporting detail, not just a list.</div>
+      <div class="q-text">Explain what OLAP allows an analyst to do with enterprise data.</div>
+      <div class="research">Before you write:<ul><li>Look up "drill-down" and "slice and dice" in the context of OLAP.</li></ul></div>
+      <textarea rows="4" data-key="q10" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q11</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain"</b> = show cause and effect — how does X lead to Y?</div>
+      <div class="q-text">Explain how data warehousing supports trend analysis in data visualisation.</div>
+      <div class="research">Before you write:<ul><li>Find one real example of a business comparing this year's data to several years of warehoused history.</li></ul></div>
+      <textarea rows="4" data-key="q11" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain, with an example"</b> = a clear point AND a concrete illustration.</div>
+      <div class="q-text">Explain how unconscious bias could affect the design of a data visualisation, using an example.</div>
+      <div class="research">Before you write:<ul><li>Look up "unconscious bias in data visualisation" and find one real example (e.g. colour choice, ordering of categories).</li></ul></div>
+      <textarea rows="4" data-key="q12" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q13</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Explain"</b> = give reasons with supporting detail, not just a list.</div>
+      <div class="q-text">Explain one criterion used to evaluate the effectiveness of a data visualisation's user experience (UX).</div>
+      <div class="research">Before you write:<ul><li>Think about a dashboard you've used — what made it easy or hard to use?</li></ul></div>
+      <textarea rows="4" data-key="q13" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="section-title"><h2>Section V — Extended Response</h2><span class="marks">8 marks</span></div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q14(a)</span><span class="q-marks">5 marks (~100 words)</span></div>
+      <div class="verb-tip">💡 <b>"Assess"</b> = weigh up issues AND reach a clear judgement — description alone will not reach Band 6.</div>
+      <div class="scenario-box">A fast-food chain with 200 stores wants to build a live dashboard tracking daily sales across every location.</div>
+      <div class="q-text">Assess whether a business analytics "as a service" platform or a custom-built software solution would be more effective for this scenario, referring to scale, cost and control.</div>
+      <div class="research">Before you write:<ul>
+        <li>What ongoing costs come with an "as a service" subscription versus a one-off custom build?</li>
+        <li>Find one real example of a large chain using a commercial analytics platform.</li>
+      </ul></div>
+      <div class="frame">Suggested structure: Strength of one option → Limitation → Overall judgement on which suits this scale of business.</div>
+      <textarea rows="6" data-key="q14a" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q14(b)</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="verb-tip">💡 <b>"Describe"</b> = give a clear, detailed account with a specific example.</div>
+      <div class="q-text">Describe one risk of this business relying on a data warehouse containing only historical data, with no live feed, for its daily sales dashboard.</div>
+      <textarea rows="4" data-key="q14b" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="finish-bar">
+      <button class="primary" id="finishBtn">Finish &amp; Unlock Self-Check</button>
+      <div class="hint">You can also wait for the timer — Self-Check unlocks automatically at 0:00.</div>
+    </div>
+  </div>
+
+  <!-- ================= SELF-CHECK PHASE ================= -->
+  <div id="phaseCheck" class="hidden">
+    <div class="banner locked">
+      <b>Self-Check — 5 minutes.</b> Your own answers now sit next to the correct answer/model answer. Move quickly: mark yourself against the criteria, and note in one line what you'd fix. We'll unpack anything still unclear as a class next.
+    </div>
+
+    <div class="section-title"><h2>Section I — Multiple Choice</h2></div>
+    <div class="q" id="mcqFeedbackBox"><!-- populated by JS --></div>
+
+    <div class="section-title"><h2>Section II — Classification</h2></div>
+    <div class="q" id="classifyFeedbackBox"><!-- populated by JS --></div>
+
+    <div class="section-title"><h2>Section III — Chart Critique</h2></div>
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q8</span><span class="q-marks">2 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q8">(no answer given)</div>
+      <div class="model-label">Correct Answer</div>
+      <div class="model-box">(960 − 820) ÷ 820 × 100 = <b>≈ 17% increase</b>.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>2 —</b> Correct percentage with working shown</li>
+        <li><b>1 —</b> Correct method with a minor calculation error, or correct answer with no working</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q8"><option value="">—</option><option>0</option><option>1</option><option>2</option></select>
+        <input class="short-fix" data-key="q8-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q9</span><span class="q-marks">4 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q9">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">The chart's Y-axis is truncated, starting at 800 instead of 0. This makes each bar's height driven only by the small difference above 800, so Q4 appears roughly eight times taller than Q1 even though actual sales only grew by about 17%. An accurate chart would start the Y-axis at 0, showing four bars of much more similar height — making the true, modest growth rate clear rather than visually exaggerated.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>4 —</b> Explains the truncated-axis technique clearly AND describes in detail what an accurate chart would show</li>
+        <li><b>2-3 —</b> Identifies the truncated axis as the technique, with limited detail on the accurate alternative</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q9"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select>
+        <input class="short-fix" data-key="q9-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="section-title"><h2>Section IV — Short Answer</h2></div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q10</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q10">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">OLAP allows an analyst to quickly slice and dice multi-dimensional data — for example, viewing sales by region, then by product, then by time period — and to drill down from a high-level summary into finer detail. This supports fast, flexible exploration of enterprise data without needing to write new queries each time.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains OLAP's function, referencing slicing/drilling into multi-dimensional data</li>
+        <li><b>2 —</b> Describes a general feature of OLAP</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q10"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q10-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q11</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q11">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">Data warehousing stores years of historical data in one consolidated location, allowing a business to compare current performance against long-term patterns. For example, a retailer could visualise this December's sales against the past five Decembers to see whether a trend is genuine growth or a normal seasonal pattern.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains how data warehousing supports trend analysis, supported by an example</li>
+        <li><b>2 —</b> Describes a general feature of data warehousing</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q11"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q11-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q12">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">Unconscious bias can affect visualisation design through choices like colour (e.g. red automatically signalling "bad" regardless of context) or the order categories are presented in, subtly steering the audience toward one interpretation without the designer intending it. For example, always placing a competitor's data in a dull grey while using a vibrant colour for the company's own data implies a judgement that may not be justified by the numbers.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains how unconscious bias affects visualisation design, supported by an example</li>
+        <li><b>2 —</b> Describes a general form of bias in visualisation</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q12"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q12-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q13</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q13">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">One criterion is relevance to the audience — a visualisation is only effective if the intended viewer can quickly understand what it's showing and why it matters to them. A dashboard packed with technical detail might suit a data analyst but overwhelm a store manager who just needs a clear daily summary.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains a genuine UX evaluation criterion, supported by an example</li>
+        <li><b>2 —</b> Describes a general UX consideration</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q13"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q13-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="section-title"><h2>Section V — Extended Response</h2></div>
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q14(a)</span><span class="q-marks">5 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q14a">(no answer given)</div>
+      <div class="model-label">Model Answer (Band 6 standard)</div>
+      <div class="model-box">A business analytics "as a service" platform offers this chain fast deployment, lower upfront cost, and automatic scaling across 200 stores without needing an in-house development team. However, it offers less control over exactly how data is processed or displayed, and ongoing subscription costs can exceed a custom build over the long term. A custom-built solution offers full control and can be tailored precisely to the chain's exact reporting needs, but requires significant upfront investment and technical expertise to build and maintain. Given the scale (200 stores) and the likely need for rapid deployment, an "as a service" platform is likely more effective initially, with a custom solution becoming worthwhile only if the business's needs become highly specialised over time.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>5 —</b> Makes an informed judgement about which option suits this scenario, supported by comprehensive reference to scale, cost and control</li>
+        <li><b>3-4 —</b> Makes a judgement, supported by reference to at least two of: scale, cost, control</li>
+        <li><b>2 —</b> Describes a feature of one or both options</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q14a"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+      <div class="rewrite-label">In one or two sentences, what would push your answer up a band?</div>
+      <textarea rows="3" data-key="q14a-rewrite" placeholder="e.g. I described both options but never reached an explicit judgement…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q14(b)</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q14b">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">If the dashboard relies only on historical warehouse data with no live feed, today's sales figures could be significantly out of date, causing store managers to miss a sudden spike or drop in real time — for example, failing to notice a store running out of stock during an unexpectedly busy day until it's too late to respond.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Describes a risk of lacking live data for this scenario, supported by an example</li>
+        <li><b>2 —</b> Outlines a general risk of relying on historical-only data</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q14b"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q14b-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="finish-bar">
+      <button class="primary" id="discussBtn">Done — Ready to Discuss</button>
+      <div class="hint">Self-Check will also advance automatically when its timer ends.</div>
+    </div>
+  </div>
+
+  <!-- ================= DISCUSS PHASE ================= -->
+  <div id="phaseDiscuss" class="hidden">
+    <div class="banner discuss">
+      <b>Class discussion — 10 minutes.</b> Put your device down. Bring your one-line "fixes" and Q14 rewrite to the discussion — your teacher will unpack the questions the class found hardest.
+    </div>
+    <div class="progress-note">Well done — that's the full 60-minute cycle for Day 4.</div>
+  </div>
+
+</main>
+
+<script>
+  const timerDisplay = document.getElementById('timerDisplay');
+  const timerLabel = document.getElementById('timerLabel');
+  const phaseWrite = document.getElementById('phaseWrite');
+  const phaseCheck = document.getElementById('phaseCheck');
+  const phaseDiscuss = document.getElementById('phaseDiscuss');
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const step3 = document.getElementById('step3');
+
+  let phase = 'write';
+  let writeSeconds = 45 * 60;
+  let checkSeconds = 5 * 60;
+  let interval;
+
+  function fmt(sec){
+    const m = Math.floor(sec/60).toString().padStart(2,'0');
+    const s = (sec%60).toString().padStart(2,'0');
+    return m+':'+s;
+  }
+  function renderWrite(){ timerDisplay.textContent = fmt(writeSeconds); timerDisplay.style.color = (writeSeconds<=300) ? '#F4C97A' : '#fff'; }
+  function renderCheck(){ timerDisplay.textContent = fmt(checkSeconds); timerDisplay.style.color = (checkSeconds<=60) ? '#F4C97A' : '#fff'; }
+
+  const mcqQuestions = [
+    {name:'q1', label:'Q1 — Purposes of data visualisation', type:'checkbox',
+     explain:"Visualisation genuinely simplifies and highlights significant results — it never alters the underlying raw data, and it certainly doesn't replace the need to collect accurate data in the first place."},
+    {name:'q2', label:'Q2 — OLAP examples', type:'checkbox',
+     explain:"OLAP is about slicing multi-dimensional data and drilling down into detail. Deleting records and translating text are unrelated functions that don't involve analytical exploration of data."},
+    {name:'q3', label:'Q3 — Data warehousing & visualisation', type:'checkbox',
+     explain:"Data warehousing consolidates historical data for trend comparison and refinement — but it can't guarantee bias-free output, and validation is still required regardless of where data is stored."},
+    {name:'q4', label:'Q4 — Bias-introducing techniques', type:'checkbox',
+     explain:"A truncated axis and a cherry-picked time period both distort how a trend appears. Consistent colour schemes and clear axis labelling are good practice, not bias."},
+    {name:'q5', label:'Q5 — UX evaluation considerations', type:'checkbox',
+     explain:"UX is about whether the audience can actually use and interpret the visualisation. Licence cost and file size have nothing to do with how usable or interpretable something is."},
+    {name:'q6', label:'Q6 — Risks of ignoring outliers', type:'checkbox',
+     explain:"A single extreme value can genuinely distort an average, and aggregation can hide sub-group variation. But outliers aren't always errors — sometimes they're the most important data point — and removing one isn't automatically 'more accurate'."},
+    {name:'q7', label:'Q7 — Evaluating visualisation software', type:'checkbox',
+     explain:"The right criteria are fit for the dataset's scale and whether the audience can interpret the output. Chasing the newest tool or the cheapest option regardless of capability ignores what the enterprise actually needs."},
+  ];
+
+  function buildMcqFeedback(){
+    const box = document.getElementById('mcqFeedbackBox');
+    let html = '';
+    mcqQuestions.forEach(q=>{
+      const inputs = Array.from(document.querySelectorAll(`input[name="${q.name}"]`));
+      const correctVals = inputs.filter(i=>i.dataset.correct==='true').map(i=>i.value);
+      const selectedVals = inputs.filter(i=>i.checked).map(i=>i.value);
+      const isCorrect = correctVals.length === selectedVals.length && correctVals.every(v=>selectedVals.includes(v));
+      const answered = selectedVals.length > 0;
+      let pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
+      let pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
+      html += `<div class="mcq-row"><span>${q.label}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
+      inputs.forEach(i=>{
+        const isOptCorrect = i.dataset.correct === 'true';
+        const isSelected = i.checked;
+        let cls, icon, tag;
+        if(isOptCorrect && isSelected){ cls='opt-correct-selected'; icon='✅'; tag='Your answer — correct'; }
+        else if(isOptCorrect && !isSelected){ cls='opt-correct-missed'; icon='⭕'; tag="Correct — you didn't select this"; }
+        else if(!isOptCorrect && isSelected){ cls='opt-wrong-selected'; icon='❌'; tag='Your answer — incorrect'; }
+        else { cls='opt-neutral'; icon='▫️'; tag=''; }
+        html += `<div class="opt-fb ${cls}"><span>${icon}</span><span>${i.value}</span>${tag ? `<span class="tag">${tag}</span>` : ''}</div>`;
+      });
+      if(!isCorrect){
+        html += `<div class="explain-line">💡 ${q.explain}</div>`;
+      }
+      html += `<div style="height:14px;"></div>`;
+    });
+    box.innerHTML = html;
+  }
+
+  const correctClass = {c1:'Spreadsheet dashboard', c2:'Presentation software', c3:'Business analytics "as a service"', c4:'Custom software solution', c5:'Spreadsheet dashboard', c6:'Business analytics "as a service"'};
+  const classLabels = {
+    c1:'Retailer, pivot tables in spreadsheet', c2:'Marketing team, board meeting slides',
+    c3:'Cloud platform, automatic real-time dashboards', c4:'Large enterprise, bespoke developer-built system',
+    c5:"Small business, built-in spreadsheet charts", c6:'Logistics company, third-party hosted dashboards'
+  };
+  const classExplain = {
+    c1:"Using pivot tables and charts within existing spreadsheet software is the defining feature of a spreadsheet dashboard.",
+    c2:"Polished slides summarising results for a meeting is exactly what presentation software is designed for.",
+    c3:"A subscription-based cloud platform that manages the infrastructure automatically is a business analytics 'as a service' product.",
+    c4:"A bespoke system built specifically for one enterprise's unique needs is a custom software solution.",
+    c5:"Built-in chart features within existing spreadsheet software is a spreadsheet dashboard, regardless of business size.",
+    c6:"Paying a third party to host and automatically update dashboards is a business analytics 'as a service' arrangement."
+  };
+  function buildClassifyFeedback(){
+    const box = document.getElementById('classifyFeedbackBox');
+    let html = '';
+    Object.keys(correctClass).forEach(key=>{
+      const sel = document.querySelector(`select[name="${key}"]`);
+      const studentVal = sel ? sel.value : '';
+      const correctVal = correctClass[key];
+      const answered = studentVal !== '';
+      const isCorrect = studentVal === correctVal;
+      const pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
+      const pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
+      html += `<div class="mcq-row"><span>${classLabels[key]}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
+      html += `<div style="font-size:.85rem; color:var(--ink-soft); margin:2px 0 6px 2px;">
+                 <b>Your answer:</b> ${answered ? studentVal : '<i>no answer given</i>'} &nbsp; | &nbsp; <b>Correct answer:</b> ${correctVal}
+               </div>`;
+      if(!isCorrect){
+        html += `<div class="explain-line">💡 ${classExplain[key]}</div>`;
+      }
+    });
+    box.innerHTML = html;
+  }
+
+  function mirrorTextAnswers(){
+    document.querySelectorAll('.your-answer-box[data-mirror]').forEach(box=>{
+      const key = box.dataset.mirror;
+      const source = document.querySelector(`textarea[data-key="${key}"]`);
+      const val = source ? source.value.trim() : '';
+      if(val){
+        box.textContent = val;
+        box.classList.remove('empty');
+      } else {
+        box.textContent = '(no answer given)';
+        box.classList.add('empty');
+      }
+    });
+  }
+
+  function goToCheck(){
+    if(phase !== 'write') return;
+    phase = 'check';
+    clearInterval(interval);
+    buildMcqFeedback();
+    buildClassifyFeedback();
+    mirrorTextAnswers();
+    phaseWrite.classList.add('hidden');
+    phaseCheck.classList.remove('hidden');
+    step1.classList.remove('active'); step1.classList.add('done');
+    step2.classList.add('active');
+    timerLabel.textContent = 'Self-check time remaining';
+    renderCheck();
+    interval = setInterval(()=>{
+      if(checkSeconds>0){ checkSeconds--; renderCheck(); }
+      if(checkSeconds<=0){ goToDiscuss(); }
+    },1000);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function goToDiscuss(){
+    if(phase === 'discuss') return;
+    phase = 'discuss';
+    clearInterval(interval);
+    phaseCheck.classList.add('hidden');
+    phaseDiscuss.classList.remove('hidden');
+    step2.classList.remove('active'); step2.classList.add('done');
+    step3.classList.add('active');
+    timerLabel.textContent = 'Discussion';
+    timerDisplay.textContent = '10:00';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  interval = setInterval(()=>{
+    if(phase==='write'){
+      if(writeSeconds>0){ writeSeconds--; renderWrite(); }
+      if(writeSeconds<=0){ goToCheck(); }
+    }
+  },1000);
+  renderWrite();
+
+  document.getElementById('finishBtn').addEventListener('click', goToCheck);
+  document.getElementById('discussBtn').addEventListener('click', goToDiscuss);
+
+  const STORAGE_KEY = 'day4_data_visualisation_v1';
+  function saveAll(){
+    const data = {};
+    document.querySelectorAll('textarea[data-key], input.short-fix[data-key]').forEach(t=>{ data[t.dataset.key] = t.value; });
+    document.querySelectorAll('select.class-select').forEach(sel=>{ data['sel_'+sel.name] = sel.value; });
+    document.querySelectorAll('select[data-selfmark]').forEach(sel=>{ data['mark_'+sel.dataset.selfmark] = sel.value; });
+    document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i=>{
+      data['chk_'+i.name+'_'+i.value] = i.checked;
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+  document.addEventListener('input', saveAll);
+  document.addEventListener('change', saveAll);
+
+  window.addEventListener('load', ()=>{
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+      document.querySelectorAll('textarea[data-key], input.short-fix[data-key]').forEach(t=>{
+        if(data[t.dataset.key]) t.value = data[t.dataset.key];
+      });
+      document.querySelectorAll('select.class-select').forEach(sel=>{
+        if(data['sel_'+sel.name]) sel.value = data['sel_'+sel.name];
+      });
+      document.querySelectorAll('select[data-selfmark]').forEach(sel=>{
+        if(data['mark_'+sel.dataset.selfmark]) sel.value = data['mark_'+sel.dataset.selfmark];
+      });
+      document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i=>{
+        if(data['chk_'+i.name+'_'+i.value]) i.checked = true;
+      });
+    }catch(e){ console.warn('Restore failed', e); }
+  });
+</script>
+
+</body>
+</html>
