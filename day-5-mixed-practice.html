@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mixed Practice Paper — Trial Exam Day 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F4F5F7; --card: #FFFFFF; --ink: #1D2330; --ink-soft: #545C70;
+    --slate: #3B4B66; --slate-deep: #232E42; --slate-pale: #E4E8EF;
+    --crimson: #B23A48; --crimson-pale: #F7E3E1;
+    --line: #DEE2EA; --danger: #B23A48;
+    --ok-bg:#E4F6E9; --ok-txt:#1E7A3D; --bad-bg:#FBE9E5; --bad-txt:#B5432A;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; line-height:1.55; padding-bottom:80px; }
+  h1,h2,h3{font-family:'Fraunces',serif; margin:0 0 4px;}
+  .wrap{max-width:840px; margin:0 auto; padding:0 20px;}
+
+  header{ background:var(--slate-deep); color:#fff; padding:28px 0 0; }
+  .head-top{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap;}
+  .eyebrow{ text-transform:uppercase; letter-spacing:.14em; font-size:.72rem; color:#A9B4CB; font-weight:600; }
+  header h1{font-size:1.6rem; color:#fff; font-weight:600;}
+  .subtitle{color:#C3CBDE; font-size:.92rem; margin-top:2px;}
+  .timer-box{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); border-radius:10px; padding:10px 18px; text-align:center; min-width:170px; }
+  .timer-box .label{font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; color:#A9B4CB;}
+  .timer-box .time{font-family:'JetBrains Mono',monospace; font-size:1.7rem; font-weight:500; color:#fff;}
+
+  .stepper{ display:flex; margin-top:26px; border-top:1px solid rgba(255,255,255,.15); }
+  .step{ flex:1; padding:14px 8px 16px; text-align:center; font-size:.82rem; font-weight:600; color:#7C88A8; border-bottom:3px solid transparent; }
+  .step .num{ display:inline-block; width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,.12); color:#A9B4CB; font-size:.7rem; line-height:20px; margin-right:6px; }
+  .step.active{color:#fff; border-bottom-color:var(--crimson);}
+  .step.active .num{background:var(--crimson); color:#fff;}
+  .step.done{color:#C3CBDE;}
+  .step.done .num{background:#5C6C90; color:#fff;}
+
+  main{padding-top:30px;}
+  .banner{ background:var(--crimson-pale); border:1px solid #E3B8B3; border-radius:10px; padding:14px 18px; font-size:.9rem; color:#7A2A31; margin-bottom:26px; }
+  .banner b{color:#5C1F24;}
+  .banner.locked{background:var(--slate-pale); border-color:#C9D0E0; color:var(--slate-deep);}
+  .banner.discuss{background:#F0EAF9; border-color:#D9C9F0; color:#4B3272;}
+
+  .section-title{ display:flex; align-items:baseline; gap:10px; margin:38px 0 6px; }
+  .section-title h2{font-size:1.15rem; color:var(--slate-deep);}
+  .section-title .marks{ font-size:.78rem; color:var(--ink-soft); font-weight:600; background:var(--slate-pale); padding:2px 9px; border-radius:20px; }
+  .section-desc{font-size:.86rem; color:var(--ink-soft); margin-bottom:16px;}
+
+  .q{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:16px; }
+  .q-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:10px;}
+  .q-num{font-weight:700; color:var(--slate-deep);}
+  .q-marks{font-size:.76rem; color:var(--ink-soft); font-weight:600; white-space:nowrap;}
+  .q-text{margin-bottom:12px; font-size:.98rem;}
+  .scenario-box{ background:#F1F3F7; border-left:3px solid var(--slate); padding:10px 14px; font-size:.9rem; border-radius:0 6px 6px 0; margin-bottom:12px; }
+
+  .opt{ display:flex; align-items:flex-start; gap:9px; padding:9px 10px; border-radius:8px; font-size:.93rem; cursor:pointer; border:1px solid transparent; }
+  .opt:hover{background:var(--slate-pale);}
+  .opt input{margin-top:3px;}
+
+  textarea{ width:100%; border:1px solid var(--line); border-radius:8px; padding:12px 14px; font-family:'Inter',sans-serif; font-size:.93rem; color:var(--ink); resize:vertical; background:#FDFDFE; }
+  textarea:focus{outline:2px solid var(--slate); outline-offset:1px;}
+
+  select.class-select{ padding:6px 10px; border-radius:6px; border:1px solid var(--line); font-family:'Inter',sans-serif; font-size:.88rem; background:#fff; }
+  table.classify{width:100%; border-collapse:collapse; font-size:.92rem;}
+  table.classify td{padding:10px 6px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  table.classify td.scenario{width:60%;}
+
+  .finish-bar{ position:sticky; bottom:0; background:var(--card); border-top:1px solid var(--line); padding:14px 0; margin-top:34px; text-align:center; }
+  button.primary{ background:var(--slate); color:#fff; border:none; padding:13px 30px; border-radius:30px; font-family:'Inter',sans-serif; font-weight:600; font-size:.95rem; cursor:pointer; transition:background .15s; }
+  button.primary:hover{background:var(--slate-deep);}
+  .hint{font-size:.78rem; color:var(--ink-soft); margin-top:8px;}
+
+  .model-label{ font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--slate-deep); margin-bottom:6px; }
+  .model-box{ background:var(--slate-pale); border-radius:8px; padding:12px 14px; font-size:.9rem; margin-bottom:12px; }
+  .criteria-box{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 14px; font-size:.85rem; margin-bottom:12px; }
+  .criteria-box ul{margin:4px 0 0 18px; padding:0;}
+  .self-mark{ display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .self-mark label{font-size:.83rem; color:var(--ink-soft); font-weight:600;}
+  .self-mark select{padding:5px 8px; border-radius:6px; border:1px solid var(--line);}
+  .rewrite-label{ font-size:.85rem; font-weight:600; color:var(--danger); margin-bottom:6px; }
+  .short-fix{width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-family:'Inter',sans-serif; font-size:.87rem;}
+
+  .your-answer-label{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--ink-soft); margin-bottom:6px;}
+  .your-answer-box{ background:#FAFAFB; border:1px solid var(--line); border-radius:8px; padding:12px 14px; font-size:.9rem; margin-bottom:12px; white-space:pre-wrap; }
+  .your-answer-box.empty{ color:#A6ABBC; font-style:italic; }
+
+  .mcq-row{ display:flex; justify-content:space-between; align-items:center; padding:7px 4px; border-bottom:1px solid var(--line); font-size:.9rem; gap:10px; }
+  .mcq-row:last-child{border-bottom:none;}
+  .pill{ font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:20px; white-space:nowrap; }
+  .pill.ok{background:var(--ok-bg); color:var(--ok-txt);}
+  .pill.bad{background:var(--bad-bg); color:var(--bad-txt);}
+  .pill.blank{background:#EEE; color:#888;}
+  .explain-line{ font-size:.83rem; color:var(--ink-soft); background:var(--slate-pale); border-radius:6px; padding:8px 10px; margin-top:8px; }
+
+  .opt-fb{ display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-radius:8px; font-size:.89rem; margin-bottom:4px; }
+  .opt-fb .tag{ font-size:.7rem; font-weight:700; margin-left:auto; white-space:nowrap; padding-left:10px; }
+  .opt-correct-selected{ background:var(--ok-bg); }
+  .opt-correct-selected .tag{color:var(--ok-txt);}
+  .opt-correct-missed{ background:#FFF6E0; border:1px dashed #E3A93F;}
+  .opt-correct-missed .tag{color:#8A6A1D;}
+  .opt-wrong-selected{ background:var(--bad-bg);}
+  .opt-wrong-selected .tag{color:var(--bad-txt);}
+  .opt-neutral{ background:transparent; color:var(--ink-soft);}
+
+  #phaseWrite.hidden, #phaseCheck.hidden, #phaseDiscuss.hidden{display:none;}
+  .progress-note{ text-align:center; font-size:.8rem; color:var(--ink-soft); margin-top:10px; }
+
+  @media(max-width:600px){ .head-top{flex-direction:column;} .stepper{flex-wrap:wrap;} .step{flex:1 1 33%;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="head-top">
+      <div>
+        <div class="eyebrow">Enterprise Computing · Trial Prep · Day 5 of 5</div>
+        <h1>Mixed Practice Paper</h1>
+        <div class="subtitle">Data Science &amp; Data Visualisation, combined — exam conditions</div>
+      </div>
+      <div class="timer-box">
+        <div class="label" id="timerLabel">Writing time remaining</div>
+        <div class="time" id="timerDisplay">45:00</div>
+      </div>
+    </div>
+    <div class="stepper">
+      <div class="step active" id="step1"><span class="num">1</span>Write (45 min)</div>
+      <div class="step" id="step2"><span class="num">2</span>Self-Check (5 min)</div>
+      <div class="step" id="step3"><span class="num">3</span>Discuss (10 min)</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= WRITE PHASE ================= -->
+  <div id="phaseWrite">
+    <div class="banner">
+      <b>Exam conditions — no research prompts, no scaffolding.</b> This paper mixes questions from every topic you've covered this week, the way the real trial will. Work independently and pace yourself — roughly 1 minute per mark. Self-Check unlocks when the timer ends or you click Finish below.
+    </div>
+
+    <div class="section-title"><h2>Section I — Multiple Choice</h2><span class="marks">7 marks</span></div>
+    <div class="section-desc">Most questions have more than one correct answer.</div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q1</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are likely to introduce <b>bias</b> into data collected by an enterprise?</div>
+      <label class="opt"><input type="checkbox" name="q1" value="A product review platform where only extremely satisfied or extremely dissatisfied customers tend to leave feedback" data-correct="true"> A product review platform where only extremely satisfied or extremely dissatisfied customers tend to leave feedback</label>
+      <label class="opt"><input type="checkbox" name="q1" value="A satisfaction survey only shared through one social media platform, missing customers who don't use it" data-correct="true"> A satisfaction survey only shared through one social media platform, missing customers who don't use it</label>
+      <label class="opt"><input type="checkbox" name="q1" value="A randomised sample drawn from the enterprise's entire customer database"> A randomised sample drawn from the enterprise's entire customer database</label>
+      <label class="opt"><input type="checkbox" name="q1" value="A sensor automatically logging every transaction as it occurs"> A sensor automatically logging every transaction as it occurs</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q2</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are genuine strengths of <b>blockchain</b> technology for verifying enterprise records?</div>
+      <label class="opt"><input type="checkbox" name="q2" value="Creates a decentralised, tamper-resistant record of transactions or ownership" data-correct="true"> Creates a decentralised, tamper-resistant record of transactions or ownership</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Makes historical records transparent and difficult to alter without network consensus" data-correct="true"> Makes historical records transparent and difficult to alter without network consensus</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Automatically speeds up unrelated data processing tasks like video rendering"> Automatically speeds up unrelated data processing tasks like video rendering</label>
+      <label class="opt"><input type="checkbox" name="q2" value="Removes the need for any data storage entirely"> Removes the need for any data storage entirely</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q3</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following demonstrate the <b>variety</b> characteristic of big data?</div>
+      <label class="opt"><input type="checkbox" name="q3" value="A retailer combining structured sales figures with unstructured customer review text in one analysis" data-correct="true"> A retailer combining structured sales figures with unstructured customer review text in one analysis</label>
+      <label class="opt"><input type="checkbox" name="q3" value="A hospital combining medical imaging, sensor readings and handwritten notes into one patient record system" data-correct="true"> A hospital combining medical imaging, sensor readings and handwritten notes into one patient record system</label>
+      <label class="opt"><input type="checkbox" name="q3" value="A single spreadsheet containing only one type of numeric sales figure"> A single spreadsheet containing only one type of numeric sales figure</label>
+      <label class="opt"><input type="checkbox" name="q3" value="A company analysing exactly the same static report every quarter"> A company analysing exactly the same static report every quarter</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q4</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are genuine benefits of using <b>SQL</b> to query a relational database?</div>
+      <label class="opt"><input type="checkbox" name="q4" value="Retrieving only records that meet a specific business condition, such as sales above a threshold" data-correct="true"> Retrieving only records that meet a specific business condition, such as sales above a threshold</label>
+      <label class="opt"><input type="checkbox" name="q4" value="Combining related data from multiple linked tables in a single query" data-correct="true"> Combining related data from multiple linked tables in a single query</label>
+      <label class="opt"><input type="checkbox" name="q4" value="Automatically generating marketing content based on query results"> Automatically generating marketing content based on query results</label>
+      <label class="opt"><input type="checkbox" name="q4" value="Replacing the need for a data dictionary entirely"> Replacing the need for a data dictionary entirely</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q5</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are techniques that could <b>mislead</b> an audience viewing an enterprise dashboard?</div>
+      <label class="opt"><input type="checkbox" name="q5" value="Truncating a chart's Y-axis so it doesn't start at zero" data-correct="true"> Truncating a chart's Y-axis so it doesn't start at zero</label>
+      <label class="opt"><input type="checkbox" name="q5" value="Selecting only the most favourable reporting period to display" data-correct="true"> Selecting only the most favourable reporting period to display</label>
+      <label class="opt"><input type="checkbox" name="q5" value="Clearly labelling every axis with its unit of measurement"> Clearly labelling every axis with its unit of measurement</label>
+      <label class="opt"><input type="checkbox" name="q5" value="Using the same scale consistently across comparable charts"> Using the same scale consistently across comparable charts</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q6</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following should be considered when assessing whether an enterprise's data collection is <b>ethical</b>?</div>
+      <label class="opt"><input type="checkbox" name="q6" value="Whether meaningful consent was obtained from the individuals involved" data-correct="true"> Whether meaningful consent was obtained from the individuals involved</label>
+      <label class="opt"><input type="checkbox" name="q6" value="Whether the data collected could disproportionately disadvantage a particular group" data-correct="true"> Whether the data collected could disproportionately disadvantage a particular group</label>
+      <label class="opt"><input type="checkbox" name="q6" value="The specific graphic design software used to present findings"> The specific graphic design software used to present findings</label>
+      <label class="opt"><input type="checkbox" name="q6" value="The total file size of the resulting dataset"> The total file size of the resulting dataset</label>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q7</span><span class="q-marks">1 mark · more than one may apply</span></div>
+      <div class="q-text">Which of the following are genuine limitations of using <b>machine learning</b> to predict future enterprise outcomes?</div>
+      <label class="opt"><input type="checkbox" name="q7" value="Predictions rely on patterns in historical data, which may not reflect sudden changes in circumstances" data-correct="true"> Predictions rely on patterns in historical data, which may not reflect sudden changes in circumstances</label>
+      <label class="opt"><input type="checkbox" name="q7" value="A model trained on biased data can produce biased predictions" data-correct="true"> A model trained on biased data can produce biased predictions</label>
+      <label class="opt"><input type="checkbox" name="q7" value="Machine learning models require no historical data to begin making predictions"> Machine learning models require no historical data to begin making predictions</label>
+      <label class="opt"><input type="checkbox" name="q7" value="Predictions from machine learning are always more accurate than human judgement"> Predictions from machine learning are always more accurate than human judgement</label>
+    </div>
+
+    <div class="section-title"><h2>Section II — Classification</h2><span class="marks">6 marks</span></div>
+    <div class="section-desc">Each row draws on a different topic from this week — select the correct classification for each.</div>
+    <div class="q">
+      <table class="classify">
+        <tr><td class="scenario">1. Customer loyalty tier (Bronze / Silver / Gold)</td>
+          <td><select class="class-select" name="c1"><option value="">Select…</option><option>Nominal</option><option>Ordinal</option><option>Interval</option><option>Ratio</option></select></td></tr>
+        <tr><td class="scenario">2. A national retailer's combined historical repository used purely for long-term trend analysis</td>
+          <td><select class="class-select" name="c2"><option value="">Select…</option><option>Local storage</option><option>Cloud storage</option><option>Portable storage media</option><option>Data warehouse</option></select></td></tr>
+        <tr><td class="scenario">3. SQL keyword used to combine two related tables via a shared key field</td>
+          <td><select class="class-select" name="c3"><option value="">Select…</option><option>SELECT</option><option>WHERE</option><option>JOIN</option><option>ORDER BY</option><option>GROUP BY</option><option>INSERT</option></select></td></tr>
+        <tr><td class="scenario">4. Annual company revenue in dollars</td>
+          <td><select class="class-select" name="c4"><option value="">Select…</option><option>Nominal</option><option>Ordinal</option><option>Interval</option><option>Ratio</option></select></td></tr>
+        <tr><td class="scenario">5. A marketing team's polished slides summarising results for a board meeting</td>
+          <td><select class="class-select" name="c5"><option value="">Select…</option><option>Spreadsheet dashboard</option><option>Presentation software</option><option>Business analytics "as a service"</option><option>Custom software solution</option></select></td></tr>
+        <tr><td class="scenario">6. SQL keyword used to filter records that meet a specific condition</td>
+          <td><select class="class-select" name="c6"><option value="">Select…</option><option>SELECT</option><option>WHERE</option><option>JOIN</option><option>ORDER BY</option><option>GROUP BY</option><option>INSERT</option></select></td></tr>
+      </table>
+    </div>
+
+    <div class="section-title"><h2>Section III — Short Answer</h2><span class="marks">12 marks</span></div>
+    <div class="section-desc">Roughly 50 words per response.</div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q8</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="q-text"><b>Explain</b> why a business collecting customer feedback through an online form with a pre-ticked opt-in checkbox may face legal issues.</div>
+      <textarea rows="4" data-key="q8" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q9</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="q-text"><b>Explain</b> how a relational database's use of key fields helps prevent data duplication.</div>
+      <textarea rows="4" data-key="q9" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q10</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="q-text"><b>Explain</b> how truncating a chart's axis can mislead an audience interpreting enterprise performance data.</div>
+      <textarea rows="4" data-key="q10" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q11</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="q-text"><b>Explain</b> one way sampling method choice can affect the reliability of data collected for an enterprise.</div>
+      <textarea rows="4" data-key="q11" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="section-title"><h2>Section IV — Extended Response</h2><span class="marks">10 marks</span></div>
+    <div class="q">
+      <div class="scenario-box">A fitness app company collects user activity data via wearable sensors (automatically, in the background), stores it in a cloud-based data warehouse, and visualises each user's daily activity on a personal dashboard.</div>
+
+      <div class="q-head"><span class="q-num">Q12(a)</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="q-text"><b>Explain</b> one privacy or security risk associated with this company's data collection method.</div>
+      <textarea rows="4" data-key="q12a" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12(b)</span><span class="q-marks">3 marks (~50 words)</span></div>
+      <div class="q-text"><b>Explain</b> how the company's choice of cloud storage supports its need to display live dashboards to users in different locations.</div>
+      <textarea rows="4" data-key="q12b" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12(c)</span><span class="q-marks">4 marks (~80 words)</span></div>
+      <div class="q-text"><b>Assess</b> whether a dashboard summarising only "average daily steps" gives users a reliable picture of their fitness activity, referring to bias, outliers or the effectiveness of the visualisation choice.</div>
+      <textarea rows="5" data-key="q12c" placeholder="Type your answer here…"></textarea>
+    </div>
+
+    <div class="finish-bar">
+      <button class="primary" id="finishBtn">Finish &amp; Unlock Self-Check</button>
+      <div class="hint">You can also wait for the timer — Self-Check unlocks automatically at 0:00.</div>
+    </div>
+  </div>
+
+  <!-- ================= SELF-CHECK PHASE ================= -->
+  <div id="phaseCheck" class="hidden">
+    <div class="banner locked">
+      <b>Self-Check — 5 minutes.</b> Your own answers now sit next to the correct answer/model answer. Move quickly: mark yourself against the criteria, and note in one line what you'd fix. We'll unpack Band 5 vs Band 6 differences as a class next.
+    </div>
+
+    <div class="section-title"><h2>Section I — Multiple Choice</h2></div>
+    <div class="q" id="mcqFeedbackBox"><!-- populated by JS --></div>
+
+    <div class="section-title"><h2>Section II — Classification</h2></div>
+    <div class="q" id="classifyFeedbackBox"><!-- populated by JS --></div>
+
+    <div class="section-title"><h2>Section III — Short Answer</h2></div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q8</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q8">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">A pre-ticked checkbox does not represent genuine informed consent, since it assumes agreement without an active choice from the user. This can breach privacy legislation requiring clear, affirmative consent before personal data is collected or used, exposing the business to legal complaints or penalties.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains the legal issue, referencing the consent principle involved</li>
+        <li><b>2 —</b> Describes a general concern with pre-ticked consent</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q8"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q8-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q9</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q9">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">Key fields (primary and foreign keys) allow related data to be stored once in one table and referenced from other tables, rather than repeating the same information across multiple records. For example, a customer's details are stored once in a Customers table and linked to multiple orders via a foreign key, instead of re-entering their details on every order.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains how key fields prevent duplication, supported by an example</li>
+        <li><b>2 —</b> Describes a general feature of key fields</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q9"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q9-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q10</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q10">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">When a chart's Y-axis doesn't start at zero, small real differences between values appear visually exaggerated, because bar heights are driven only by the range above the truncation point. This can lead an audience to believe growth or change is far more dramatic than the underlying data actually shows.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains how axis truncation misleads an audience, with clear reasoning</li>
+        <li><b>2 —</b> Describes a general way charts can mislead</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q10"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q10-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q11</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q11">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">If a sample doesn't represent the wider population — for example, surveying only existing customers rather than the general public — the data collected will be biased, and conclusions drawn from it may not reliably generalise to the entire target market.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains how sampling method affects reliability, supported by an example</li>
+        <li><b>2 —</b> Describes a general link between sampling and reliability</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q11"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q11-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="section-title"><h2>Section IV — Extended Response</h2></div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12(a)</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q12a">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">Because the wearable sensors collect data passively and continuously, users may not be fully aware of exactly what is being tracked or how often, raising a risk that sensitive health-related data (e.g. heart rate, location) could be collected beyond what users reasonably expect or consented to.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains a privacy/security risk, referencing the passive collection method</li>
+        <li><b>2 —</b> Describes a general privacy concern</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q12a"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q12a-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12(b)</span><span class="q-marks">3 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q12b">(no answer given)</div>
+      <div class="model-label">Model Answer</div>
+      <div class="model-box">Cloud storage allows data to be accessed and updated from any location with an internet connection, meaning users in different cities or countries can all view their up-to-date activity dashboard in real time, without the company needing separate local servers for each region.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>3 —</b> Explains how cloud storage supports this specific need, with clear reasoning</li>
+        <li><b>2 —</b> Describes a general benefit of cloud storage</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q12b"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option></select>
+        <input class="short-fix" data-key="q12b-fix" placeholder="One thing I'd fix…">
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12(c)</span><span class="q-marks">4 marks</span></div>
+      <div class="your-answer-label">Your answer</div>
+      <div class="your-answer-box empty" data-mirror="q12c">(no answer given)</div>
+      <div class="model-label">Model Answer (Band 6 standard)</div>
+      <div class="model-box">An average alone can be misleading, since a single unusually high or low day (an outlier) can distort the figure and mask genuine day-to-day patterns — such as consistently low weekday activity offset by one very active weekend day. This means the average may not accurately reflect the user's typical behaviour, reducing the dashboard's real usefulness for tracking meaningful progress. A more effective visualisation would show the full daily trend (e.g. a line graph across the week) alongside the average, letting users see both the overall pattern and any unusual outliers — giving a more reliable and actionable picture than the average alone.</div>
+      <div class="criteria-box"><b>Marking criteria:</b><ul>
+        <li><b>4 —</b> Makes an informed judgement about the dashboard's reliability, supported by comprehensive reference to bias/outliers, and proposes why an alternative would be more effective</li>
+        <li><b>2-3 —</b> Makes a judgement, supported by some reference to bias, outliers or effectiveness</li>
+        <li><b>1 —</b> Provides some relevant information</li>
+      </ul></div>
+      <div class="self-mark"><label>Self-mark:</label>
+        <select data-selfmark="q12c"><option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select>
+      </div>
+      <div class="rewrite-label">In one or two sentences, what would push your answer up a band?</div>
+      <textarea rows="3" data-key="q12c-rewrite" placeholder="e.g. I described a limitation but never reached an explicit judgement…"></textarea>
+    </div>
+
+    <div class="finish-bar">
+      <button class="primary" id="discussBtn">Done — Ready to Discuss</button>
+      <div class="hint">Self-Check will also advance automatically when its timer ends.</div>
+    </div>
+  </div>
+
+  <!-- ================= DISCUSS PHASE ================= -->
+  <div id="phaseDiscuss" class="hidden">
+    <div class="banner discuss">
+      <b>Class discussion — 10 minutes.</b> Put your device down. Bring your one-line "fixes" and Q12(c) rewrite — your teacher will compare real Band 5 and Band 6 responses to the same question from across the class.
+    </div>
+    <div class="progress-note">That's the full 5-day revision program complete. Good luck for the trial.</div>
+  </div>
+
+</main>
+
+<script>
+  const timerDisplay = document.getElementById('timerDisplay');
+  const timerLabel = document.getElementById('timerLabel');
+  const phaseWrite = document.getElementById('phaseWrite');
+  const phaseCheck = document.getElementById('phaseCheck');
+  const phaseDiscuss = document.getElementById('phaseDiscuss');
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const step3 = document.getElementById('step3');
+
+  let phase = 'write';
+  let writeSeconds = 45 * 60;
+  let checkSeconds = 5 * 60;
+  let interval;
+
+  function fmt(sec){
+    const m = Math.floor(sec/60).toString().padStart(2,'0');
+    const s = (sec%60).toString().padStart(2,'0');
+    return m+':'+s;
+  }
+  function renderWrite(){ timerDisplay.textContent = fmt(writeSeconds); timerDisplay.style.color = (writeSeconds<=300) ? '#F4C97A' : '#fff'; }
+  function renderCheck(){ timerDisplay.textContent = fmt(checkSeconds); timerDisplay.style.color = (checkSeconds<=60) ? '#F4C97A' : '#fff'; }
+
+  const mcqQuestions = [
+    {name:'q1', label:'Q1 — Bias in data collection', type:'checkbox',
+     explain:"Both flagged scenarios under-represent parts of the population — self-selecting extreme reviewers, and a single-platform survey missing non-users. A random sample and automatic transaction logging don't introduce this kind of bias."},
+    {name:'q2', label:'Q2 — Blockchain strengths', type:'checkbox',
+     explain:"Blockchain's value is its decentralised, tamper-resistant ledger. It has nothing to do with speeding up unrelated processing tasks, and it still requires data storage — it just structures how that storage is verified."},
+    {name:'q3', label:'Q3 — Big data: variety', type:'checkbox',
+     explain:"Variety refers to combining different types/formats of data (structured + unstructured). A single numeric spreadsheet or an unchanging static report shows neither variety nor any big data characteristic at all."},
+    {name:'q4', label:'Q4 — SQL benefits', type:'checkbox',
+     explain:"SQL's strengths are filtering records and joining related tables. It has no role in generating marketing content, and a data dictionary is still needed to document the database's structure regardless of SQL use."},
+    {name:'q5', label:'Q5 — Misleading dashboard techniques', type:'checkbox',
+     explain:"Truncated axes and cherry-picked time periods both distort perception. Clear axis labelling and consistent scales are good practice — the opposite of misleading."},
+    {name:'q6', label:'Q6 — Ethical data collection', type:'checkbox',
+     explain:"Ethical assessment centres on consent and potential disadvantage to groups. Design software choice and file size are technical/presentation details, not ethical considerations."},
+    {name:'q7', label:'Q7 — ML prediction limitations', type:'checkbox',
+     explain:"ML predictions are limited by their training data and can encode bias from it. They absolutely require historical data to function, and no ML system can be assumed to always outperform human judgement — both distractors overclaim what the technique guarantees."},
+  ];
+
+  function buildMcqFeedback(){
+    const box = document.getElementById('mcqFeedbackBox');
+    let html = '';
+    mcqQuestions.forEach(q=>{
+      const inputs = Array.from(document.querySelectorAll(`input[name="${q.name}"]`));
+      const correctVals = inputs.filter(i=>i.dataset.correct==='true').map(i=>i.value);
+      const selectedVals = inputs.filter(i=>i.checked).map(i=>i.value);
+      const isCorrect = correctVals.length === selectedVals.length && correctVals.every(v=>selectedVals.includes(v));
+      const answered = selectedVals.length > 0;
+      let pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
+      let pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
+      html += `<div class="mcq-row"><span>${q.label}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
+      inputs.forEach(i=>{
+        const isOptCorrect = i.dataset.correct === 'true';
+        const isSelected = i.checked;
+        let cls, icon, tag;
+        if(isOptCorrect && isSelected){ cls='opt-correct-selected'; icon='✅'; tag='Your answer — correct'; }
+        else if(isOptCorrect && !isSelected){ cls='opt-correct-missed'; icon='⭕'; tag="Correct — you didn't select this"; }
+        else if(!isOptCorrect && isSelected){ cls='opt-wrong-selected'; icon='❌'; tag='Your answer — incorrect'; }
+        else { cls='opt-neutral'; icon='▫️'; tag=''; }
+        html += `<div class="opt-fb ${cls}"><span>${icon}</span><span>${i.value}</span>${tag ? `<span class="tag">${tag}</span>` : ''}</div>`;
+      });
+      if(!isCorrect){
+        html += `<div class="explain-line">💡 ${q.explain}</div>`;
+      }
+      html += `<div style="height:14px;"></div>`;
+    });
+    box.innerHTML = html;
+  }
+
+  const correctClass = {c1:'Ordinal', c2:'Data warehouse', c3:'JOIN', c4:'Ratio', c5:'Presentation software', c6:'WHERE'};
+  const classLabels = {
+    c1:'Customer loyalty tier (Bronze/Silver/Gold)', c2:"Retailer's long-term trend repository",
+    c3:'Combine related tables via a key field', c4:'Annual company revenue in dollars',
+    c5:'Board-meeting summary slides', c6:'Filter records meeting a condition'
+  };
+  const classExplain = {
+    c1:"Tiers have a meaningful order (Bronze<Silver<Gold) but unequal gaps between them — that's ordinal.",
+    c2:"A large repository combining historical data purely for long-term trend analysis is the defining feature of a data warehouse.",
+    c3:"Combining matching records from two related tables using a common key field is exactly what JOIN does.",
+    c4:"Revenue has a true zero and equal intervals — that's ratio.",
+    c5:"Polished slides for a board meeting is exactly what presentation software is designed for.",
+    c6:"WHERE is the clause used to filter records down to those meeting a condition."
+  };
+  function buildClassifyFeedback(){
+    const box = document.getElementById('classifyFeedbackBox');
+    let html = '';
+    Object.keys(correctClass).forEach(key=>{
+      const sel = document.querySelector(`select[name="${key}"]`);
+      const studentVal = sel ? sel.value : '';
+      const correctVal = correctClass[key];
+      const answered = studentVal !== '';
+      const isCorrect = studentVal === correctVal;
+      const pillClass = !answered ? 'blank' : (isCorrect ? 'ok' : 'bad');
+      const pillText = !answered ? 'BLANK' : (isCorrect ? 'CORRECT' : 'INCORRECT');
+      html += `<div class="mcq-row"><span>${classLabels[key]}</span><span class="pill ${pillClass}">${pillText}</span></div>`;
+      html += `<div style="font-size:.85rem; color:var(--ink-soft); margin:2px 0 6px 2px;">
+                 <b>Your answer:</b> ${answered ? studentVal : '<i>no answer given</i>'} &nbsp; | &nbsp; <b>Correct answer:</b> ${correctVal}
+               </div>`;
+      if(!isCorrect){
+        html += `<div class="explain-line">💡 ${classExplain[key]}</div>`;
+      }
+    });
+    box.innerHTML = html;
+  }
+
+  function mirrorTextAnswers(){
+    document.querySelectorAll('.your-answer-box[data-mirror]').forEach(box=>{
+      const key = box.dataset.mirror;
+      const source = document.querySelector(`textarea[data-key="${key}"]`);
+      const val = source ? source.value.trim() : '';
+      if(val){
+        box.textContent = val;
+        box.classList.remove('empty');
+      } else {
+        box.textContent = '(no answer given)';
+        box.classList.add('empty');
+      }
+    });
+  }
+
+  function goToCheck(){
+    if(phase !== 'write') return;
+    phase = 'check';
+    clearInterval(interval);
+    buildMcqFeedback();
+    buildClassifyFeedback();
+    mirrorTextAnswers();
+    phaseWrite.classList.add('hidden');
+    phaseCheck.classList.remove('hidden');
+    step1.classList.remove('active'); step1.classList.add('done');
+    step2.classList.add('active');
+    timerLabel.textContent = 'Self-check time remaining';
+    renderCheck();
+    interval = setInterval(()=>{
+      if(checkSeconds>0){ checkSeconds--; renderCheck(); }
+      if(checkSeconds<=0){ goToDiscuss(); }
+    },1000);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function goToDiscuss(){
+    if(phase === 'discuss') return;
+    phase = 'discuss';
+    clearInterval(interval);
+    phaseCheck.classList.add('hidden');
+    phaseDiscuss.classList.remove('hidden');
+    step2.classList.remove('active'); step2.classList.add('done');
+    step3.classList.add('active');
+    timerLabel.textContent = 'Discussion';
+    timerDisplay.textContent = '10:00';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  interval = setInterval(()=>{
+    if(phase==='write'){
+      if(writeSeconds>0){ writeSeconds--; renderWrite(); }
+      if(writeSeconds<=0){ goToCheck(); }
+    }
+  },1000);
+  renderWrite();
+
+  document.getElementById('finishBtn').addEventListener('click', goToCheck);
+  document.getElementById('discussBtn').addEventListener('click', goToDiscuss);
+
+  const STORAGE_KEY = 'day5_mixed_practice_v1';
+  function saveAll(){
+    const data = {};
+    document.querySelectorAll('textarea[data-key], input.short-fix[data-key]').forEach(t=>{ data[t.dataset.key] = t.value; });
+    document.querySelectorAll('select.class-select').forEach(sel=>{ data['sel_'+sel.name] = sel.value; });
+    document.querySelectorAll('select[data-selfmark]').forEach(sel=>{ data['mark_'+sel.dataset.selfmark] = sel.value; });
+    document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i=>{
+      data['chk_'+i.name+'_'+i.value] = i.checked;
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+  document.addEventListener('input', saveAll);
+  document.addEventListener('change', saveAll);
+
+  window.addEventListener('load', ()=>{
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+      document.querySelectorAll('textarea[data-key], input.short-fix[data-key]').forEach(t=>{
+        if(data[t.dataset.key]) t.value = data[t.dataset.key];
+      });
+      document.querySelectorAll('select.class-select').forEach(sel=>{
+        if(data['sel_'+sel.name]) sel.value = data['sel_'+sel.name];
+      });
+      document.querySelectorAll('select[data-selfmark]').forEach(sel=>{
+        if(data['mark_'+sel.dataset.selfmark]) sel.value = data['mark_'+sel.dataset.selfmark];
+      });
+      document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i=>{
+        if(data['chk_'+i.name+'_'+i.value]) i.checked = true;
+      });
+    }catch(e){ console.warn('Restore failed', e); }
+  });
+</script>
+
+</body>
+</html>
